@@ -1,0 +1,28 @@
+{
+  "name": "hum-redis",
+  "version": "0.0.0",
+  "description": "A promise-based minimal Redis client",
+  "main": "index.js",
+  "scripts": {
+    "test": "mocha spec"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hum/hum-redis.git"
+  },
+  "dependencies": {
+    "q": "0.9.0",
+    "hiredis": "0.1.14"
+  },
+  "devDependencies": {
+    "mocha": "1.8.1",
+    "mocha-as-promised": "1.2.1"
+  },
+  "keywords": [
+    "redis",
+    "promise",
+    "promises"
+  ],
+  "author": "Michael Jackson",
+  "license": "MIT"
+}
