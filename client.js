@@ -20,16 +20,16 @@ function Client(options) {
   this.host = options.host || 'localhost';
   this.port = parseInt(options.port, 10) || 6379;
   this.returnBuffers = options.returnBuffers || false;
+  this.deferreds = [];
+
   this.db = 0;
-  this.stack = [];
-
-  this._setupParser();
-
   if (options.auth) {
     var parsedAuth = options.auth.split(':');
     if (parsedAuth[0]) this.db = parsedAuth[0];
     if (parsedAuth[1]) this.password = parsedAuth[1];
   }
+
+  this._setupParser();
 }
 
 Client.prototype._setupParser = function () {
@@ -40,8 +40,7 @@ Client.prototype._setupParser = function () {
     if (typeof self._replyHandler === 'function') {
       self._replyHandler(reply);
     } else {
-      var deferred = self.stack.shift();
-
+      var deferred = self.deferreds.shift();
       if (reply && reply.constructor === Error) {
         deferred.reject(reply);
       } else {
@@ -111,62 +110,32 @@ Client.prototype.send = function (command, args) {
 
   var deferred = q.defer();
 
-  this.stack.push(deferred);
+  this.deferreds.push(deferred);
   this.connection.write(payload);
 
   return deferred.promise;
+};
+
+Client.prototype.stream = function (command, args) {
+  var replyHandler = args.pop();
+
+  if (typeof replyHandler !== 'function') {
+    throw new Error('Last argument to ' + command + ' must be a callback');
+  }
+
+  this._replyHandler = replyHandler;
+
+  return this.send(command, args);
 };
 
 Client.prototype.SELECT = select;
 Client.prototype.select = select;
 function select(db) {
   var self = this;
-  return this.send('select', [ db ]).then(function (response) {
+  return this.send('select', [ db ]).then(function (reply) {
     self.db = db;
-    return response;
+    return reply;
   });
-}
-
-Client.prototype.PSUBSCRIBE = psubscribe;
-Client.prototype.psubscribe = psubscribe;
-function psubscribe() {
-  var patterns = _slice.call(arguments, 0);
-  var replyHandler = patterns.pop();
-
-  if (typeof replyHandler !== 'function') {
-    throw new Error('Last argument to subscribe must be a callback');
-  }
-
-  this._replyHandler = replyHandler;
-
-  return this.send('psubscribe', patterns);
-}
-
-Client.prototype.SUBSCRIBE = subscribe;
-Client.prototype.subscribe = subscribe;
-function subscribe() {
-  var channels = _slice.call(arguments, 0);
-  var replyHandler = patterns.pop();
-
-  if (typeof replyHandler !== 'function') {
-    throw new Error('Last argument to subscribe must be a callback');
-  }
-
-  this._replyHandler = replyHandler;
-
-  return this.send('subscribe', channels);
-}
-
-Client.prototype.MONITOR = monitor;
-Client.prototype.monitor = monitor;
-function monitor(replyHandler) {
-  if (typeof replyHandler !== 'function') {
-    throw new Error('Only argument to monitor must be a callback');
-  }
-
-  this._replyHandler = replyHandler;
-
-  return this.send('monitor');
 }
 
 var sendCommands = [
@@ -174,15 +143,12 @@ var sendCommands = [
   'del', 'dump', 'exists', 'expire', 'expireat', 'keys', 'migrate', 'move',
   'object', 'persist', 'pexpire', 'pexpireat', 'pttl', 'randomkey', 'rename',
   'renamenx', 'restore', 'sort', 'ttl', 'type',
-
   // strings
   'append', 'bitcount', 'bitop', 'decr', 'decrby', 'get', 'getbit', 'getrange',
   'getset', 'incr', 'incrby', 'incrbyfloat', 'mget', 'mset', 'msetnx', 'psetex',
   'set', 'setbit', 'setex', 'setnx', 'setrange', 'strlen',
-
   // pubsub
-  'psubscribe', 'publish', 'punsubscribe', 'subscribe', 'unsubscribe',
-
+  'publish', 'punsubscribe', 'unsubscribe',
   // server
   'flushdb'
 ];
@@ -192,5 +158,20 @@ sendCommands.forEach(function (command) {
   Client.prototype[command] = Client.prototype[upperCommand] = function () {
     var args = _slice.call(arguments, 0);
     return this.send(command, args);
+  };
+});
+
+var streamCommands = [
+  // pubsub
+  'psubscribe', 'subscribe',
+  // server
+  'monitor'
+];
+
+streamCommands.forEach(function (command) {
+  var upperCommand = command.toUpperCase();
+  Client.prototype[command] = Client.prototype[upperCommand] = function () {
+    var args = _slice.call(arguments, 0);
+    return this.stream(command, args);
   };
 });
