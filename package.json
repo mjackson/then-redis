@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/hum/hum-redis.git"
+    "url": "git://github.com/mjijackson/hum-redis.git"
   },
   "dependencies": {
     "q": "0.9.0",
