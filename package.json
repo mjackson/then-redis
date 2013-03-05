@@ -1,8 +1,8 @@
 {
   "name": "hum-redis",
   "version": "0.0.0",
-  "description": "A promise-based minimal Redis client",
-  "main": "index.js",
+  "description": "A small, promise-based Redis client",
+  "main": "lib/index.js",
   "scripts": {
     "test": "mocha spec"
   },

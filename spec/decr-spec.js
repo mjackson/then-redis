@@ -31,7 +31,7 @@ describe('decr', function () {
         assert(false, 'decr succeeded on a non-integer key');
       }, function (error) {
         assert(error);
-        assert.match(error.message, /not an integer/);
+        assertMatch(error.message, /not an integer/);
       });
     });
   });
