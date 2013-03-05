@@ -19,6 +19,7 @@ assertMatch = function (string, regexp, message) {
   assert(regexp.test(string), message);
 };
 
-compareArrays = function (one, two, message) {
-  assert.equal(one.join(), two.join(), message);
+// A global API for waiting for pubsub message delivery.
+waitForMessages = function (delay) {
+  return q.delay(delay || 10);
 };

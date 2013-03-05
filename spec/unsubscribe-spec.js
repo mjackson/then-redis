@@ -39,7 +39,7 @@ describe('when subscribed to many channels', function () {
     });
 
     it('emits all channel names', function () {
-      compareArrays(unsubscribedChannels.sort(), channels.sort());
+      assert.deepEqual(unsubscribedChannels.sort(), channels.sort());
     });
   });
 });
@@ -48,7 +48,7 @@ describe('when subscribed to no channels', function () {
   describe('unsubscribing from all channels', function () {
     it('returns null', function () {
       return db.unsubscribe().then(function (reply) {
-        compareArrays(reply, [ 'unsubscribe', null, 0 ]);
+        assert.deepEqual(reply, [ 'unsubscribe', null, 0 ]);
       });
     });
   });

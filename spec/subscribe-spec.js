@@ -35,7 +35,7 @@ describe('subscribe', function () {
     });
 
     it('streams messages that are sent to that channel', function () {
-      compareArrays(receivedMessages, sentMessages);
+      assert.deepEqual(receivedMessages, sentMessages);
     });
   });
 
@@ -60,13 +60,13 @@ describe('subscribe', function () {
         return q.all([
           sendMessages('a', aSentMessages),
           sendMessages('b', bSentMessages)
-        ]);
+        ]).then(waitForMessages);
       });
     });
 
     it('streams messages that are sent to any of those channels', function () {
-      compareArrays(aReceivedMessages, aSentMessages);
-      compareArrays(bReceivedMessages, bSentMessages);
+      assert.deepEqual(aReceivedMessages, aSentMessages);
+      assert.deepEqual(bReceivedMessages, bSentMessages);
     });
   });
 });
