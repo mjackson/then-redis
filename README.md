@@ -88,6 +88,7 @@ Testing
 
 To run the tests:
 
+    $ redis-server --port 6379
     $ npm install
     $ npm test
 
