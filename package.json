@@ -1,5 +1,5 @@
 {
-  "name": "hum-redis",
+  "name": "then-redis",
   "version": "0.0.0",
   "description": "A small, promise-based Redis client",
   "main": "lib/index.js",
@@ -8,7 +8,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mjijackson/hum-redis.git"
+    "url": "git://github.com/mjijackson/then-redis.git"
   },
   "dependencies": {
     "q": "0.9.0",
