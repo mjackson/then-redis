@@ -12,7 +12,7 @@ hum-redis tries to get out of your way as much as possible. Command arguments an
 
 hum-redis uses [pipelining](http://redis.io/topics/pipelining) to issue all commands. This means that commands are issues over the TCP socket as quickly as possible, and that subsequent commands do not need to wait to find out the result of previous commands before they are issued.
 
-\* Except for `HMSET` and `HGETALL` which accept and return hashes (i.e. JavaScript objects) respectively.
+\* Except for `MSET`, `HMSET` and `HGETALL` which optionally accept/return hashes (i.e. JavaScript objects) for convenience.
 
 Usage
 =====
