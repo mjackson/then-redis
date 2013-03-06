@@ -1,0 +1,22 @@
+require('./helper');
+
+describe('scard', function () {
+  describe('when a set is empty', function () {
+    it('returns 0', function () {
+      return db.scard('my-set').then(function (cardinality) {
+        assert.strictEqual(cardinality, 0);
+      });
+    });
+  });
+
+  describe('when a set has 4 members', function () {
+    it('returns the cardinality of the set', function () {
+      return db.sadd('my-set', 1, 2, 3, 4).then(function (numItemsAdded) {
+        assert.strictEqual(numItemsAdded, 4);
+        return db.scard('my-set').then(function (cardinality) {
+          assert.strictEqual(cardinality, 4);
+        });
+      });
+    });
+  });
+});
