@@ -1,12 +1,12 @@
 Intro
 =====
 
-then-redis is a simple, promise-based [Redis](http://redis.io) client. It supports all features of Redis in a very small, user-friendly package.
+then-redis is a small, promise-based [Redis](http://redis.io) client. It supports all the features of Redis in a simple, user-friendly package.
 
 The two major differences between then-redis and [node_redis](https://github.com/mranney/node_redis) are:
 
   1. then-redis returns a promise when you issue a command
-  2. The entire codebase is very small (~300 LOC)
+  2. The entire codebase is very small (~300 LOC), just like Redis
 
 then-redis gets out of your way as much as possible. Command arguments and return values are exactly what you see in [Redis' Command Reference](http://redis.io/commands)*. All Redis commands are available as instance methods on clients that accept variable length argument lists.
 
