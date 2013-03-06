@@ -1,5 +1,5 @@
-Intro
-=====
+then-redis
+==========
 
 then-redis is a small, promise-based [Redis](http://redis.io) client. It supports all the features of Redis in a simple, user-friendly package.
 
@@ -72,6 +72,16 @@ Usage
 
       return db.publish('my-channel', 'a message');
     });
+
+    // Transactions
+    db.multi();
+    db.incr('first-key');
+    db.incr('second-key');
+    db.exec().then(function (reply) {
+      assert.deepEqual(reply, [ 1, 1 ]);
+    });
+
+The [specs](https://github.com/mjijackson/then-redis/tree/master/spec) also have lots of good usage examples.
 
 Testing
 =======
