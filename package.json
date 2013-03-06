@@ -1,6 +1,6 @@
 {
   "name": "then-redis",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A small, promise-based Redis client",
   "main": "lib/index.js",
   "scripts": {
