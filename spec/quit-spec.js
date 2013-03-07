@@ -3,9 +3,7 @@ require('./helper');
 describe('quit', function () {
   var quitter;
   beforeEach(function () {
-    return redis.connect().then(function (client) {
-      quitter = client;
-    });
+    quitter = redis.createClient();
   });
 
   it('emits the "close" event', function (done) {

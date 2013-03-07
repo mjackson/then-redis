@@ -3,9 +3,7 @@ require('./helper');
 describe('subscribe', function () {
   var subscriber;
   beforeEach(function () {
-    return redis.connect().then(function (client) {
-      subscriber = client;
-    });
+    subscriber = redis.createClient();
   });
 
   // Sends the given messages in order to the given channel.

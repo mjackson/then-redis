@@ -3,9 +3,7 @@ require('./helper');
 describe('monitor', function () {
   var monitor;
   beforeEach(function () {
-    return redis.connect().then(function (client) {
-      monitor = client;
-    });
+    monitor = redis.createClient();
   });
 
   describe('when monitoring the database', function () {
