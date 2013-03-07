@@ -19,66 +19,71 @@ Usage
 
     var redis = require('then-redis');
 
-    // Creating a client
-    var db = redis.createClient();
-    var db = redis.createClient('tcp://localhost:6379');
-    var db = redis.createClient({
+    // Connecting
+    redis.connect();
+    redis.connect('tcp://localhost:6379');
+    redis.connect({
       host: 'localhost',
-      port: 6379,
-      returnBuffers: true
+      port: 6379
     });
 
-    // AUTH and SELECT are done for you if you need it.
-    var db = redis.createClient({
+    // AUTH and SELECT are done for you if you need them.
+    redis.connect('tcp://1:password@localhost:6379');
+    redis.connect({
       host: 'localhost',
       port: 6379,
       database: 1,
       password: 'password'
     });
-    var db = redis.createClient('tcp://1:password@localhost:6379');
 
-    // Simple set, incrby, and get
-    db.set('my-key', 1);
-    db.incrby('my-key', 5);
-    db.get('my-key').then(function (value) {
-      assert.strictEqual(value, 6);
-    });
+    // Running commands
+    redis.connect().then(function (db) {
 
-    // Multi-key set/get
-    db.mset({ a: 'one', b: 'two' });
-    db.mget('a', 'b').then(function (values) {
-      assert.deepEqual(values, [ 'one', 'two' ]);
-    });
-
-    // Sets
-    db.sadd('my-set', 1, 2, 3);
-    db.sismember('my-set', 2).then(function (value) {
-      assert.strictEqual(value, 1);
-    });
-
-    // Hashes
-    var originalHash = { a: 'one', b: 'two' };
-    db.hmset('my-hash', originalHash);
-    db.hgetall('my-hash').then(function (hash) {
-      assert.deepEqual(hash, originalHash);
-    });
-
-    // Pubsub
-    var sub = redis.createClient();
-    sub.subscribe('my-channel').then(function () {
-      sub.on('message', function (channel, message) {
-        console.log('Received message: ' + message);
+      // Simple set, incrby, and get
+      db.set('my-key', 1);
+      db.incrby('my-key', 5);
+      db.get('my-key').then(function (value) {
+        assert.strictEqual(value, 6);
       });
 
-      return db.publish('my-channel', 'a message');
-    });
+      // Multi-key set/get
+      db.mset({ a: 'one', b: 'two' });
+      db.mget('a', 'b').then(function (values) {
+        assert.deepEqual(values, [ 'one', 'two' ]);
+      });
 
-    // Transactions
-    db.multi();
-    db.incr('first-key');
-    db.incr('second-key');
-    db.exec().then(function (reply) {
-      assert.deepEqual(reply, [ 1, 1 ]);
+      // Sets
+      db.sadd('my-set', 1, 2, 3);
+      db.sismember('my-set', 2).then(function (value) {
+        assert.strictEqual(value, 1);
+      });
+
+      // Hashes
+      var originalHash = { a: 'one', b: 'two' };
+      db.hmset('my-hash', originalHash);
+      db.hgetall('my-hash').then(function (hash) {
+        assert.deepEqual(hash, originalHash);
+      });
+
+      // Pubsub
+      redis.connect().then(function (subscriber) {
+        subscriber.on('message', function (channel, message) {
+          console.log('Received message: ' + message);
+        });
+
+        subscriber.subscribe('my-channel').then(function () {
+          db.publish('my-channel', 'a message');
+        });
+      });
+
+      // Transactions
+      db.multi();
+      db.incr('first-key');
+      db.incr('second-key');
+      db.exec().then(function (reply) {
+        assert.deepEqual(reply, [ 1, 1 ]);
+      });
+
     });
 
 The [specs](https://github.com/mjijackson/then-redis/tree/master/spec) also have lots of good usage examples.
