@@ -18,10 +18,8 @@ describe('when a server requires auth', function () {
       client = redis.createClient({ host: db.host, port: db.port, password: password });
     });
 
-    it('is able to issue commands successfully', function () {
-      return client.get('a-key').then(function (value) {
-        assert.strictEqual(value, null);
-      });
+    it('does not throw when commands are issued', function () {
+      return client.get('a-key');
     });
   });
 
@@ -31,7 +29,7 @@ describe('when a server requires auth', function () {
       client = redis.createClient({ host: db.host, port: db.port });
     });
 
-    it('is able to issue commands successfully', function () {
+    it('throws when commands are issued', function () {
       return client.get('a-key').then(function (value) {
         assert(false, 'client issued command without auth');
       }, function (error) {
