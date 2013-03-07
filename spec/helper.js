@@ -17,7 +17,7 @@ before(function () {
 
 beforeEach(function () {
   return db.flushdb().then(function (reply) {
-    assertMatch(reply, /OK|QUEUED/);
+    assert.strictEqual(reply, 'OK');
   });
 });
 

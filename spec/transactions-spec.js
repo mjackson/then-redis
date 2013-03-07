@@ -31,6 +31,7 @@ describe('transactions', function () {
         assert(false, 'successfully queued non-existent command');
       }, function (error) {
         assert(error);
+        return db.discard();
       });
     });
   });
