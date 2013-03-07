@@ -1,9 +1,11 @@
 require('./helper');
 
 describe('monitor', function () {
-  var sender;
+  var monitor;
   beforeEach(function () {
-    sender = redis.createClient();
+    return redis.connect().then(function (client) {
+      monitor = client;
+    });
   });
 
   describe('when monitoring the database', function () {
@@ -16,11 +18,11 @@ describe('monitor', function () {
         [ 'get', 'a' ]
       ];
 
-      db.on('monitor', function (message) {
+      monitor.on('monitor', function (message) {
         monitorMessages.push(message);
       });
 
-      return db.monitor().then(function (reply) {
+      return monitor.monitor().then(function (reply) {
         assert.equal(reply, 'OK');
 
         // Send all commands in order.
@@ -29,7 +31,7 @@ describe('monitor', function () {
         sentCommands.forEach(function (commandArgs) {
           var command = commandArgs.shift();
           result = result.then(function () {
-            return sender.send(command, commandArgs);
+            return db.send(command, commandArgs);
           });
         });
 

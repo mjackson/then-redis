@@ -1,9 +1,11 @@
 require('./helper');
 
 describe('subscribe', function () {
-  var publisher;
+  var subscriber;
   beforeEach(function () {
-    publisher = redis.createClient();
+    return redis.connect().then(function (client) {
+      subscriber = client;
+    });
   });
 
   // Sends the given messages in order to the given channel.
@@ -12,7 +14,7 @@ describe('subscribe', function () {
 
     messages.forEach(function (message) {
       result = result.then(function () {
-        return publisher.publish(channel, message);
+        return db.publish(channel, message);
       });
     });
 
@@ -25,11 +27,11 @@ describe('subscribe', function () {
       receivedMessages = [];
       sentMessages = [ 'a', 'b', 'c' ];
 
-      db.on('message', function (channel, message) {
+      subscriber.on('message', function (channel, message) {
         receivedMessages.push(message);
       });
 
-      return db.subscribe('a').then(function () {
+      return subscriber.subscribe('a').then(function () {
         return sendMessages('a', sentMessages);
       });
     });
@@ -48,14 +50,14 @@ describe('subscribe', function () {
       aSentMessages = [ 'a', 'b', 'c' ];
       bSentMessages = [ 'd', 'e', 'f' ];
 
-      db.on('message', function (channel, message) {
+      subscriber.on('message', function (channel, message) {
         if (channel === 'a') aReceivedMessages.push(message);
         if (channel === 'b') bReceivedMessages.push(message);
       });
 
       return q.all([
-        db.subscribe('a'),
-        db.subscribe('b')
+        subscriber.subscribe('a'),
+        subscriber.subscribe('b')
       ]).then(function () {
         return q.all([
           sendMessages('a', aSentMessages),
@@ -70,3 +72,7 @@ describe('subscribe', function () {
     });
   });
 });
+
+function waitForMessages(delay) {
+  return q.delay(delay || 10);
+}

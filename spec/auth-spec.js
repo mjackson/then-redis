@@ -13,24 +13,28 @@ describe('when a server requires auth', function () {
   });
 
   describe('a new client with the correct password', function () {
-    var client;
+    var newClient;
     beforeEach(function () {
-      client = redis.createClient({ host: db.host, port: db.port, password: password });
+      return redis.connect({ host: db.host, port: db.port, password: password }).then(function (client) {
+        newClient = client;
+      });
     });
 
     it('does not throw when commands are issued', function () {
-      return client.get('a-key');
+      return newClient.get('a-key');
     });
   });
 
   describe('a new client with the wrong password', function () {
-    var client;
+    var newClient;
     beforeEach(function () {
-      client = redis.createClient({ host: db.host, port: db.port });
+      return redis.connect({ host: db.host, port: db.port }).then(function (client) {
+        newClient = client;
+      });
     });
 
     it('throws when commands are issued', function () {
-      return client.get('a-key').then(function (value) {
+      return newClient.get('a-key').then(function (value) {
         assert(false, 'client issued command without auth');
       }, function (error) {
         assert(error);

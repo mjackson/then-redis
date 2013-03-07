@@ -1,10 +1,13 @@
 require('./helper');
 
 describe('when subscribed to many channels', function () {
-  var channels;
+  var channels, subscriber;
   beforeEach(function () {
     channels = [ 'abc', 'def' ];
-    return db.subscribe.apply(db, channels);
+    return redis.connect().then(function (client) {
+      subscriber = client;
+      return subscriber.subscribe.apply(subscriber, channels);
+    });
   });
 
   describe('unsubscribing from a channel', function () {
@@ -12,12 +15,12 @@ describe('when subscribed to many channels', function () {
     beforeEach(function (done) {
       unsubscribedChannel = null;
 
-      db.on('unsubscribe', function (channel, numSubscriptions) {
+      subscriber.on('unsubscribe', function (channel, numSubscriptions) {
         unsubscribedChannel = channel;
         done();
       });
 
-      db.unsubscribe('abc');
+      subscriber.unsubscribe('abc');
     });
 
     it('emits the channel name', function () {
@@ -30,12 +33,12 @@ describe('when subscribed to many channels', function () {
     beforeEach(function (done) {
       unsubscribedChannels = [];
 
-      db.on('unsubscribe', function (channel, numSubscriptions) {
+      subscriber.on('unsubscribe', function (channel, numSubscriptions) {
         unsubscribedChannels.push(channel);
         if (unsubscribedChannels.length === channels.length) done();
       });
 
-      db.unsubscribe();
+      subscriber.unsubscribe();
     });
 
     it('emits all channel names', function () {
@@ -45,9 +48,16 @@ describe('when subscribed to many channels', function () {
 });
 
 describe('when subscribed to no channels', function () {
+  var subscriber;
+  beforeEach(function () {
+    return redis.connect().then(function (client) {
+      subscriber = client;
+    });
+  });
+
   describe('unsubscribing from all channels', function () {
     it('returns null', function () {
-      return db.unsubscribe().then(function (reply) {
+      return subscriber.unsubscribe().then(function (reply) {
         assert.deepEqual(reply, [ 'unsubscribe', null, 0 ]);
       });
     });
