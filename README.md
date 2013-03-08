@@ -14,12 +14,14 @@ then-redis uses [pipelining](http://redis.io/topics/pipelining) to issue all com
 
 \* `MSET`, `MSETNX`, `HMSET` and `HGETALL` optionally accept/return JavaScript objects for convenience in dealing with Redis' multi-key and hash APIs
 
-Usage
-=====
+### Usage
+
+All of the usage examples assume the following:
 
     var redis = require('then-redis');
 
-    // Creating clients
+To create a client:
+
     var db = redis.createClient();
     var db = redis.createClient('tcp://localhost:6379');
     var db = redis.createClient({
