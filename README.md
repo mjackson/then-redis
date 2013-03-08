@@ -8,7 +8,7 @@ The two major differences between then-redis and [node_redis](https://github.com
   1. then-redis returns a promise when you issue a command
   2. The entire codebase is very small (~300 LOC), just like Redis
 
-then-redis gets out of your way as much as possible. Command arguments and return values are exactly what you see in [Redis' Command Reference](http://redis.io/commands)*. All Redis commands are available as instance methods on clients that accept variable length argument lists.
+then-redis gets out of your way as much as possible. Command arguments and return values are exactly what you see in [Redis' Command Reference](http://redis.io/commands)*.
 
 then-redis uses [pipelining](http://redis.io/topics/pipelining) to issue all commands. This means that commands are issues over the TCP socket as quickly as possible, and that subsequent commands do not need to wait to find out the result of previous commands before they are issued.
 
@@ -27,7 +27,8 @@ Usage
       port: 6379
     });
 
-    // AUTH and SELECT are done for you if you need them.
+If you need to use [AUTH](http://redis.io/commands/auth) or [SELECT](http://redis.io/commands/select) you can include them in the auth segment of your URL or in the `password` and `database` properties of an object literal.
+
     var db = redis.createClient('tcp://1:password@localhost:6379');
     var db = redis.createClient({
       host: 'localhost',
@@ -35,6 +36,8 @@ Usage
       database: 1,
       password: 'password'
     });
+
+Once you have a client, you're ready to issue some commands. All Redis commands are present on the `redis.Client` prototype and may be called with variable length argument lists.
 
     // Simple set, incrby, and get
     db.set('my-key', 1);
@@ -77,6 +80,25 @@ Usage
     });
     subscriber.subscribe('my-channel').then(function () {
       db.publish('my-channel', 'a message');
+    });
+
+When you create a client without explicitly calling `client.connect()` afterwards it will try to automatically establish a connection the first time you issue a command. While it's waiting for the connection to be established it will buffer all commands and then flush them in the correct order once the socket is open. This works beautifully most of the time (all the specs are written in this style), but it will throw if your connection fails for some reason.
+
+To be sure you have a good connection to the database before issuing any commands, call `client.connect()` or use the high-level `redis.connect(options)` method to create a client and connect in one call. Use `then` to wait for the response from Redis before continuing.
+
+    // Create a separate client instance and connect() it.
+    var db = redis.createClient(options);
+    db.connect().then(function () {
+      db.get('my-key');
+    }, function (error) {
+      console.log('Failed to connect to Redis: ' + error);
+    });
+
+    // Or use redis.connect() to do both in one call.
+    redis.connect(options).then(function (db) {
+      db.get('my-key');
+    }, function (error) {
+      console.log('Failed to connect to Redis: ' + error);
     });
 
 The [specs](https://github.com/mjijackson/then-redis/tree/master/spec) also have lots of good usage examples.
