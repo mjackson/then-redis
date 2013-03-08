@@ -105,8 +105,7 @@ To be sure you have a good connection to the database before issuing any command
 
 The [specs](https://github.com/mjijackson/then-redis/tree/master/spec) also have lots of good usage examples.
 
-Testing
-=======
+### Testing
 
 To run the tests:
 
@@ -114,8 +113,7 @@ To run the tests:
     $ npm install
     $ npm test
 
-License
-=======
+### License
 
 Copyright 2013 Michael Jackson
 
