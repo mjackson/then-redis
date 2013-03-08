@@ -10,7 +10,7 @@ The two major differences between then-redis and [node_redis](https://github.com
 
 then-redis gets out of your way as much as possible. Command arguments and return values are exactly what you see in [Redis' Command Reference](http://redis.io/commands)*.
 
-then-redis uses [pipelining](http://redis.io/topics/pipelining) to issue all commands. This means that commands are issues over the TCP socket as quickly as possible, and that subsequent commands do not need to wait to find out the result of previous commands before they are issued.
+then-redis uses [pipelining](http://redis.io/topics/pipelining) to issue all commands. This means that commands are issued over the socket connection as quickly as possible, and that subsequent commands do not need to wait to find out the result of previous commands before they are issued. Of course, if you need to find out the result of a previous command first, just use `then` (see the examples below).
 
 \* `MSET`, `MSETNX`, `HMSET` and `HGETALL` optionally accept/return JavaScript objects for convenience in dealing with Redis' multi-key and hash APIs
 
