@@ -1,7 +1,7 @@
 then-redis
 ==========
 
-then-redis is a small, promise-based [Redis](http://redis.io) client. It supports all the features of Redis in a simple, user-friendly package.
+then-redis is a small, promise-based [Redis](http://redis.io) client for [node.js](http://nodejs.org). It supports all the features of Redis in a simple, user-friendly package.
 
 The two major differences between then-redis and [node_redis](https://github.com/mranney/node_redis) are:
 
