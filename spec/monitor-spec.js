@@ -33,7 +33,7 @@ describe('monitor', function () {
           });
         });
 
-        return result;
+        return result.then(waitForDelivery);
       });
     });
 
@@ -45,3 +45,8 @@ describe('monitor', function () {
     });
   });
 });
+
+// Waits for monitor messages to be delivered.
+function waitForDelivery() {
+  return q.delay(10);
+}

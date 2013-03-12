@@ -30,7 +30,7 @@ describe('subscribe', function () {
       });
 
       return subscriber.subscribe('a').then(function () {
-        return sendMessages('a', sentMessages);
+        return sendMessages('a', sentMessages).then(waitForDelivery);
       });
     });
 
@@ -60,7 +60,7 @@ describe('subscribe', function () {
         return q.all([
           sendMessages('a', aSentMessages),
           sendMessages('b', bSentMessages)
-        ]).then(waitForMessages);
+        ]).then(waitForDelivery);
       });
     });
 
@@ -71,6 +71,7 @@ describe('subscribe', function () {
   });
 });
 
-function waitForMessages(delay) {
-  return q.delay(delay || 10);
+// Waits for pubsub messages to be delivered.
+function waitForDelivery() {
+  return q.delay(10);
 }
