@@ -84,7 +84,13 @@ Once you have a client, you're ready to issue some commands. All Redis commands 
       db.publish('my-channel', 'a message');
     });
 
-When you create a client without explicitly calling `client.connect()` afterwards it will try to automatically establish a connection the first time you issue a command. While it's waiting for the connection to be established it will buffer all commands and then flush them in the correct order once the socket is open. This works beautifully most of the time (all the specs are written in this style), but it will throw if your connection fails for some reason.
+If you don't like the variable-length argument lists, or you already have an array of arguments that you need to pass to a command, you can always call `client.send()` directly. It takes two arguments: 1) the name of the Redis command and 2) an array of command arguments.
+
+    db.send('get', [ 'my-key' ]);
+    db.send('incrby', [ 'my-key', 5 ]);
+    db.send('mset', [ 'a', 'one', 'b', 'two' ]);
+
+When you create a client without explicitly calling `client.connect()` it will try to automatically establish a connection the first time you issue a command. While it's waiting for the connection to be established it will buffer all commands and then flush them in the correct order once the socket is open. This works beautifully most of the time (all the specs are written in this style), but it will throw if your connection fails for some reason.
 
 To be sure you have a good connection to the database before issuing any commands, call `client.connect()` or use the high-level `redis.connect(options)` method to create a client and connect in one call. Use `then` to wait for the response from Redis before continuing.
 
