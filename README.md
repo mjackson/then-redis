@@ -5,7 +5,7 @@ then-redis is a small, promise-based [Redis](http://redis.io) client for [node.j
 
 The two major differences between then-redis and [node_redis](https://github.com/mranney/node_redis) are:
 
-  1. then-redis returns a promise when you issue a command
+  1. then-redis returns a [CommonJS Promises/A+ promise](http://promises-aplus.github.com/promises-spec/) when you issue a command
   2. The entire codebase is very small (~300 LOC), just like Redis
 
 then-redis gets out of your way as much as possible. Command arguments and return values are exactly what you see in [Redis' Command Reference](http://redis.io/commands)*.
