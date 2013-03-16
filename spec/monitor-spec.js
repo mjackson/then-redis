@@ -24,7 +24,8 @@ describe('monitor', function () {
         assert.equal(reply, 'OK');
 
         // Send all commands in order.
-        var result = q.resolve();
+        var result = new rsvp.Promise;
+        result.resolve();
 
         sentCommands.forEach(function (commandArgs) {
           var command = commandArgs.shift();
@@ -48,5 +49,5 @@ describe('monitor', function () {
 
 // Waits for monitor messages to be delivered.
 function waitForDelivery() {
-  return q.delay(10);
+  return wait(10);
 }

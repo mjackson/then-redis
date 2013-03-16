@@ -8,7 +8,8 @@ describe('subscribe', function () {
 
   // Sends the given messages in order to the given channel.
   function sendMessages(channel, messages) {
-    var result = q.resolve();
+    var result = new rsvp.Promise;
+    result.resolve();
 
     messages.forEach(function (message) {
       result = result.then(function () {
@@ -53,11 +54,11 @@ describe('subscribe', function () {
         if (channel === 'b') bReceivedMessages.push(message);
       });
 
-      return q.all([
+      return rsvp.all([
         subscriber.subscribe('a'),
         subscriber.subscribe('b')
       ]).then(function () {
-        return q.all([
+        return rsvp.all([
           sendMessages('a', aSentMessages),
           sendMessages('b', bSentMessages)
         ]).then(waitForDelivery);
@@ -73,5 +74,5 @@ describe('subscribe', function () {
 
 // Waits for pubsub messages to be delivered.
 function waitForDelivery() {
-  return q.delay(10);
+  return wait(10);
 }
