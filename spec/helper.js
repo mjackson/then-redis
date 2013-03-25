@@ -1,5 +1,5 @@
 assert = require('assert');
-rsvp = require('rsvp');
+when = require('when');
 redis = require('../lib');
 
 // Override mocha's built-in methods with promise-aware versions.
@@ -19,12 +19,7 @@ assertMatch = function (string, regexp, message) {
   assert(regexp.test(string), message);
 };
 
-wait = function (delay) {
-  var promise = new rsvp.Promise;
-
-  setTimeout(function () {
-    promise.resolve();
-  }, delay);
-
-  return promise;
+var delay = require('when/delay');
+wait = function (ms) {
+  return delay(null, ms);
 };

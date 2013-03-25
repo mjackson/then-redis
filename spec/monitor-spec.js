@@ -24,8 +24,7 @@ describe('monitor', function () {
         assert.equal(reply, 'OK');
 
         // Send all commands in order.
-        var result = new rsvp.Promise;
-        result.resolve();
+        var result = when();
 
         sentCommands.forEach(function (commandArgs) {
           var command = commandArgs.shift();
