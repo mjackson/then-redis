@@ -12,7 +12,7 @@ then-redis gets out of your way as much as possible. Command arguments and retur
 
 then-redis uses [pipelining](http://redis.io/topics/pipelining) to issue all commands. This means that commands are issued over the socket connection as quickly as possible, and that subsequent commands do not need to wait to find out the result of previous commands before they are issued. Of course, if you need to find out the result of a previous command first, just use `then` (see the examples below).
 
-\* `MSET`, `MSETNX`, `HMSET` and `HGETALL` optionally accept/return JavaScript objects for convenience in dealing with Redis' multi-key and hash APIs
+\* `INFO`, `MSET`, `MSETNX`, `HMSET` and `HGETALL` optionally accept/return JavaScript objects for convenience in dealing with Redis' multi-key and hash APIs
 
 ### Usage
 
