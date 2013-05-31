@@ -119,6 +119,10 @@ To run the tests:
     $ npm install
     $ npm test
 
+### Compatibility
+
+For best results, it is recommended that you use Redis >= 2.6.13.
+
 ### License
 
 Copyright 2013 Michael Jackson
