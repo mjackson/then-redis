@@ -11,7 +11,7 @@ db = redis.createClient();
 
 beforeEach(function () {
   return db.flushdb().then(function (reply) {
-    assert.strictEqual(reply, 'OK');
+    assert.equal(reply, 'OK');
   });
 });
 
