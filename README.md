@@ -121,7 +121,7 @@ To run the tests:
 
 ### Compatibility
 
-For best results, it is recommended that you use Redis >= 2.6.13.
+For best results, it is recommended that you use Redis 2.6
 
 ### License
 
