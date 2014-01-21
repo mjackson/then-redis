@@ -1,6 +1,6 @@
 {
   "name": "then-redis",
-  "version": "0.3.9",
+  "version": "0.3.10",
   "description": "A small, promise-based Redis client",
   "main": "lib/index.js",
   "scripts": {
@@ -11,8 +11,8 @@
     "url": "git://github.com/mjijackson/then-redis.git"
   },
   "dependencies": {
-    "when": "2.0.x",
-    "hiredis": "0.1.15"
+    "when": "2.7.1",
+    "hiredis": "0.1.16"
   },
   "devDependencies": {
     "mocha": "1.8.1",
