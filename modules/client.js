@@ -134,7 +134,9 @@ Client.prototype.connect = function () {
     });
 
     connection.on('error', function (error) {
-      if (self.connection) self._flushError(error);
+      if (self.connection)
+        self._flushError(error);
+      
       self._connectValue.reject(error);
     });
 
