@@ -12,7 +12,7 @@ describe('sunion', function () {
 
   it('returns the members of the set resulting from the union of all given sets', function () {
     return db.sunion('set-one', 'set-two', 'set-three').then(function (union) {
-      assert.deepEqual(union.sort(), [1, 2, 3, 4, 5, 6, 7, 8]);
+      expect(union.sort()).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
     });
   });
 });

@@ -1,4 +1,5 @@
 assert = require('assert');
+expect = require('expect');
 redis = require('../modules');
 
 // Override mocha's built-in methods with promise-aware versions.
@@ -10,7 +11,7 @@ db = redis.createClient();
 
 beforeEach(function () {
   return db.flushdb().then(function (reply) {
-    assert.equal(reply, 'OK');
+    expect(reply).toEqual('OK');
   });
 });
 

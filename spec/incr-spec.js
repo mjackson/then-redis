@@ -4,7 +4,7 @@ describe('incr', function () {
   describe('when a key does not exist', function () {
     it('returns 1', function () {
       return db.incr('does-not-exist').then(function (reply) {
-        assert.strictEqual(reply, 1);
+        expect(reply).toBe(1);
       });
     });
   });
@@ -16,7 +16,7 @@ describe('incr', function () {
 
     it('returns the incremented value', function () {
       return db.incr('a-key').then(function (reply) {
-        assert.strictEqual(reply, 6);
+        expect(reply).toBe(6);
       });
     });
   });

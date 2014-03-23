@@ -4,7 +4,7 @@ describe('get', function () {
   describe('when a key does not exist', function () {
     it('returns null', function () {
       return db.get('does-not-exist').then(function (reply) {
-        assert.strictEqual(reply, null);
+        expect(reply).toBe(null);
       });
     });
   });
@@ -19,7 +19,7 @@ describe('get', function () {
 
     it('returns its value', function () {
       return db.get(key).then(function (reply) {
-        assert.strictEqual(reply, expectedReply);
+        expect(reply).toBe(expectedReply);
       });
     });
   });

@@ -22,7 +22,7 @@ describe('when subscribed to many channels', function () {
     });
 
     it('emits the channel name', function () {
-      assert.equal(unsubscribedChannel, 'abc');
+      expect(unsubscribedChannel).toEqual('abc');
     });
   });
 
@@ -40,7 +40,7 @@ describe('when subscribed to many channels', function () {
     });
 
     it('emits all channel names', function () {
-      assert.deepEqual(unsubscribedChannels.sort(), channels.sort());
+      expect(unsubscribedChannels.sort()).toEqual(channels.sort());
     });
   });
 });
@@ -54,7 +54,7 @@ describe('when subscribed to no channels', function () {
   describe('unsubscribing from all channels', function () {
     it('returns null', function () {
       return subscriber.unsubscribe().then(function (reply) {
-        assert.deepEqual(reply, [ 'unsubscribe', null, 0 ]);
+        expect(reply).toEqual([ 'unsubscribe', null, 0 ]);
       });
     });
   });

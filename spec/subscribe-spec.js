@@ -36,7 +36,7 @@ describe('subscribe', function () {
     });
 
     it('streams messages that are sent to that channel', function () {
-      assert.deepEqual(receivedMessages, sentMessages);
+      expect(receivedMessages).toEqual(sentMessages);
     });
   });
 
@@ -66,8 +66,8 @@ describe('subscribe', function () {
     });
 
     it('streams messages that are sent to any of those channels', function () {
-      assert.deepEqual(aReceivedMessages, aSentMessages);
-      assert.deepEqual(bReceivedMessages, bSentMessages);
+      expect(aReceivedMessages).toEqual(aSentMessages);
+      expect(bReceivedMessages).toEqual(bSentMessages);
     });
   });
 });

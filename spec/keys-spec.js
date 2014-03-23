@@ -5,7 +5,7 @@ describe('keys', function () {
   describe('when there are no keys', function () {
     it('returns an empty array', function () {
       return db.keys('*').then(function (keys) {
-        assert.deepEqual(keys, []);
+        expect(keys).toEqual([]);
       });
     });
   });
@@ -26,7 +26,7 @@ describe('keys', function () {
 
     it('returns an array of all keys', function () {
       return db.keys('*').then(function (keys) {
-        assert.deepEqual(keys.sort(), Object.keys(hash).sort());
+        expect(keys.sort()).toEqual(Object.keys(hash).sort());
       });
     });
   });

@@ -5,7 +5,7 @@ describe('mset', function () {
     it('sets all keys to the correct values', function () {
       return db.mset('a', 'one', 'b', 'two', 'c', 'three').then(function () {
         return db.mget('a', 'b', 'c').then(function (values) {
-          assert.deepEqual(values, [ 'one', 'two', 'three' ]);
+          expect(values).toEqual([ 'one', 'two', 'three' ]);
         });
       });
     });
@@ -15,7 +15,7 @@ describe('mset', function () {
     it('sets all keys to the correct values', function () {
       return db.mset({ a: 'one', b: 'two', c: 'three' }).then(function () {
         return db.mget('a', 'b', 'c').then(function (values) {
-          assert.deepEqual(values, [ 'one', 'two', 'three' ]);
+          expect(values).toEqual([ 'one', 'two', 'three' ]);
         });
       });
     });

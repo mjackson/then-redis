@@ -4,7 +4,7 @@ describe('decr', function () {
   describe('when a key does not exist', function () {
     it('returns -1', function () {
       return db.decr('does-not-exist').then(function (reply) {
-        assert.strictEqual(reply, -1);
+        expect(reply).toBe(-1);
       });
     });
   });
@@ -16,7 +16,7 @@ describe('decr', function () {
 
     it('returns the decremented value', function () {
       return db.decr('a-key').then(function (reply) {
-        assert.strictEqual(reply, 4);
+        expect(reply).toBe(4);
       });
     });
   });

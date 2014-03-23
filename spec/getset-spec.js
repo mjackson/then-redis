@@ -4,7 +4,7 @@ describe('getset', function () {
   describe('when a key does not exist', function () {
     it('returns null', function () {
       return db.getset('does-not-exist', 'hello world').then(function (reply) {
-        assert.strictEqual(reply, null);
+        expect(reply).toBe(null);
       });
     });
   });
@@ -19,9 +19,9 @@ describe('getset', function () {
 
     it('returns its value and sets the new value', function () {
       return db.getset(key, 'another value').then(function (reply) {
-        assert.strictEqual(reply, expectedReply);
+        expect(reply).toBe(expectedReply);
         return db.get(key).then(function (reply) {
-          assert.strictEqual(reply, 'another value');
+          expect(reply).toBe('another value');
         });
       });
     });

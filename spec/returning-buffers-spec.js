@@ -20,7 +20,7 @@ describe('when returning buffers', function () {
       it('returns a buffer', function () {
         return db.get('a-key').then(function (reply) {
           assert(Buffer.isBuffer(reply));
-          assert.equal(reply.toString(), 'a value');
+          expect(reply.toString()).toEqual('a value');
         });
       });
     });
@@ -28,7 +28,7 @@ describe('when returning buffers', function () {
     describe('when a key does not exist', function () {
       it('returns null', function () {
         return db.get('a-key').then(function (reply) {
-          assert.strictEqual(reply, null);
+          expect(reply).toBe(null);
         });
       });
     });
@@ -57,7 +57,7 @@ describe('when returning buffers', function () {
         return db.mget('a-key', 'c-key').then(function (reply) {
           assert(Array.isArray(reply));
           assert(Buffer.isBuffer(reply[0]));
-          assert.strictEqual(reply[1], null);
+          expect(reply[1]).toBe(null);
         });
       });
     });

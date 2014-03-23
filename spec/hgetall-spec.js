@@ -7,7 +7,7 @@ describe('hgetall', function () {
 
   it('returns all fields and values of the hash at the given key', function () {
     return db.hgetall('my-key').then(function (hash) {
-      assert.deepEqual(hash, { a: 'one', b: 'two', c: 'three' });
+      expect(hash).toEqual({ a: 'one', b: 'two', c: 'three' });
     });
   });
 });

@@ -7,7 +7,7 @@ describe('transactions', function () {
       db.incr('a');
       db.incr('b');
       return db.exec().then(function (reply) {
-        assert.deepEqual(reply, [ 1, 1 ]);
+        expect(reply).toEqual([ 1, 1 ]);
       });
     });
   });
@@ -18,7 +18,7 @@ describe('transactions', function () {
       db.set('a', 'hello');
       db.incr('a');
       return db.exec().then(function (reply) {
-        assert.equal(reply.length, 2);
+        expect(reply.length).toEqual(2);
         assert(reply[1] instanceof Error);
       });
     });

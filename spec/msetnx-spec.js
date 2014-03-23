@@ -8,7 +8,7 @@ describe('msetnx', function () {
 
     it('returns 0', function () {
       return db.msetnx('a', 'one', 'b', 'two', 'c', 'three').then(function (reply) {
-        assert.strictEqual(reply, 0);
+        expect(reply).toBe(0);
       });
     });
   });
@@ -19,7 +19,7 @@ describe('msetnx', function () {
       it('sets all keys to the correct values', function () {
         return db.msetnx('a', 'one', 'b', 'two', 'c', 'three').then(function () {
           return db.mget('a', 'b', 'c').then(function (values) {
-            assert.deepEqual(values, [ 'one', 'two', 'three' ]);
+            expect(values).toEqual([ 'one', 'two', 'three' ]);
           });
         });
       });
@@ -29,7 +29,7 @@ describe('msetnx', function () {
       it('sets all keys to the correct values', function () {
         return db.msetnx({ a: 'one', b: 'two', c: 'three' }).then(function () {
           return db.mget('a', 'b', 'c').then(function (values) {
-            assert.deepEqual(values, [ 'one', 'two', 'three' ]);
+            expect(values).toEqual([ 'one', 'two', 'three' ]);
           });
         });
       });

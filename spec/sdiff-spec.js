@@ -12,7 +12,7 @@ describe('sdiff', function () {
 
   it('returns the members of the set resulting from the difference between the first set and all successive sets', function () {
     return db.sdiff('set-one', 'set-two', 'set-three').then(function (diff) {
-      assert.deepEqual(diff.sort(), [1, 2]);
+      expect(diff.sort()).toEqual([1, 2]);
     });
   });
 });

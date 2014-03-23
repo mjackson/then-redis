@@ -10,7 +10,7 @@ describe('set', function () {
 
   it('sets the value of a key', function () {
     return db.get(key).then(function (reply) {
-      assert.strictEqual(reply, expectedReply);
+      expect(reply).toBe(expectedReply);
     });
   });
 });

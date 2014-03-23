@@ -22,7 +22,7 @@ describe('monitor', function () {
       });
 
       return monitor.monitor().then(function (reply) {
-        assert.equal(reply, 'OK');
+        expect(reply).toEqual('OK');
 
         // Send all commands in order.
         var result = RSVP.resolve();
@@ -39,7 +39,7 @@ describe('monitor', function () {
     });
 
     it('receives a message for all commands in the order they are sent', function () {
-      assert.equal(monitorMessages.length, sentCommands.length);
+      expect(monitorMessages.length).toEqual(sentCommands.length);
       monitorMessages.forEach(function (message, index) {
         assertMatch(message, new RegExp('"' + sentCommands[index][0] + '"'));
       });
