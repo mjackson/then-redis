@@ -1,17 +1,14 @@
-var redis = module.exports;
+exports.Client = require('./client');
+exports.ReplyParser = require('./reply-parser');
 
-redis.Client = require('./client');
-redis.ReplyParser = require('./reply-parser');
+exports.createClient = function (options) {
+  return new exports.Client(options);
+};
 
-redis.createClient = createClient;
-function createClient(options) {
-  return new redis.Client(options);
-}
-
-redis.connect = connect;
-function connect(options) {
-  var client = redis.createClient(options);
+exports.connect = function (options) {
+  var client = exports.createClient(options);
+  
   return client.connect().then(function () {
     return client;
   });
-}
+};
