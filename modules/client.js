@@ -2,7 +2,7 @@ var url = require('url');
 var net = require('net');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-var when = require('when');
+var RSVP = require('rsvp');
 var ReplyParser = require('./reply-parser');
 
 module.exports = Client;
@@ -110,7 +110,7 @@ Client.prototype._write = function (value, write) {
 // If neither are needed, this value will always be ["OK", "OK"].
 Client.prototype.connect = function () {
   if (!this._connectValue) {
-    this._connectValue = when.defer();
+    this._connectValue = RSVP.defer();
 
     var connection = net.createConnection(this.port, this.host);
     connection.setNoDelay(this.noDelay);
@@ -126,7 +126,7 @@ Client.prototype.connect = function () {
       var selectValue = self.database ? self.select(self.database) : 'OK';
       self._flushPendingWrites();
 
-      self._connectValue.resolve(when.all([ authValue, selectValue ]));
+      self._connectValue.resolve(RSVP.all([ authValue, selectValue ]));
     });
 
     connection.on('error', function (error) {
@@ -159,7 +159,7 @@ Client.prototype.disconnect = function () {
 // Issues the given Redis command to the server with the given arguments
 // and returns a promise for the reply.
 Client.prototype.send = function (command, args) {
-  var value = when.defer();
+  var value = RSVP.defer();
   var numArgs = args ? args.length : 0;
   var write = '*' + (1 + numArgs) + '\r\n';
 

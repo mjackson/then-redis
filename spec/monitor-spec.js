@@ -1,4 +1,5 @@
 require('./helper');
+var RSVP = require('rsvp');
 
 describe('monitor', function () {
   var monitor;
@@ -24,7 +25,7 @@ describe('monitor', function () {
         assert.equal(reply, 'OK');
 
         // Send all commands in order.
-        var result = when();
+        var result = RSVP.resolve();
 
         sentCommands.forEach(function (commandArgs) {
           var command = commandArgs.shift();

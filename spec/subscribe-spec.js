@@ -1,4 +1,5 @@
 require('./helper');
+var RSVP = require('rsvp');
 
 describe('subscribe', function () {
   var subscriber;
@@ -8,15 +9,15 @@ describe('subscribe', function () {
 
   // Sends the given messages in order to the given channel.
   function sendMessages(channel, messages) {
-    var result = when();
+    messages = messages.slice(0);
 
-    messages.forEach(function (message) {
-      result = result.then(function () {
+    var result = db.publish(channel, messages.shift());
+
+    return messages.reduce(function (result, message) {
+      return result.then(function () {
         return db.publish(channel, message);
       });
-    });
-
-    return result;
+    }, result);
   }
 
   describe('when subscribing to a channel', function () {
@@ -53,11 +54,11 @@ describe('subscribe', function () {
         if (channel === 'b') bReceivedMessages.push(message);
       });
 
-      return when.all([
+      return RSVP.all([
         subscriber.subscribe('a'),
         subscriber.subscribe('b')
       ]).then(function () {
-        return when.all([
+        return RSVP.all([
           sendMessages('a', aSentMessages),
           sendMessages('b', bSentMessages)
         ]).then(waitForDelivery);

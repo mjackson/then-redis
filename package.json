@@ -11,8 +11,8 @@
     "url": "git://github.com/mjijackson/then-redis.git"
   },
   "dependencies": {
-    "when": "2.7.1",
-    "hiredis": "0.1.16"
+    "rsvp": "~3.0.6",
+    "hiredis": "~0.1.16"
   },
   "devDependencies": {
     "mocha": "1.8.1",
