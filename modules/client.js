@@ -189,9 +189,11 @@ Client.prototype.send = function (command, args) {
 };
 
 // Add all Redis commands to the Client prototype for convenience.
+var _proto = Client.prototype;
 var commands = require('./commands');
+
 for (var command in commands) {
-  Client.prototype[command] = commands[command];
+  _proto[command] = _proto[command.toUpperCase()] = commands[command];
 }
 
 /* helpers */
