@@ -1,6 +1,6 @@
 assert = require('assert');
 when = require('when');
-redis = require('../lib');
+redis = require('../modules');
 
 // Override mocha's built-in methods with promise-aware versions.
 require('mocha-as-promised')();

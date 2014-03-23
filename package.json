@@ -2,7 +2,7 @@
   "name": "then-redis",
   "version": "0.3.10",
   "description": "A small, promise-based Redis client",
-  "main": "lib/index.js",
+  "main": "modules/index.js",
   "scripts": {
     "test": "mocha spec"
   },
