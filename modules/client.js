@@ -9,17 +9,24 @@ module.exports = Client;
 
 function Client(options) {
   EventEmitter.call(this);
+
   options = options || process.env.REDIS_URL || 'tcp://127.0.0.1:6379';
 
   if (typeof options === 'string') {
     var parsed = url.parse(options);
+    
     options = {};
     options.host = parsed.hostname;
     options.port = parsed.port;
+
     if (parsed.auth) {
       var split = parsed.auth.split(':');
-      if (split[0]) options.database = split[0];
-      if (split[1]) options.password = split[1];
+
+      if (split[0])
+        options.database = split[0];
+
+      if (split[1])
+        options.password = split[1];
     }
   }
 
@@ -75,9 +82,8 @@ Client.prototype._handleReply = function (reply) {
 
     // (pun)subscribe can generate many replies. The first
     // one is returned. All are emitted as events.
-    if (isSubReply(reply)) {
+    if (isSubReply(reply))
       this.emit.apply(this, reply);
-    }
   } else if (isSubReply(reply)) {
     this.emit.apply(this, reply);
   } else if (this.isMonitor) {
@@ -89,16 +95,14 @@ Client.prototype._handleReply = function (reply) {
 
 Client.prototype._flushError = function (error) {
   var value;
-  while (value = this._commandValues.shift()) {
+  while (value = this._commandValues.shift())
     value.reject(error);
-  }
 };
 
 Client.prototype._flushPendingWrites = function () {
   var value;
-  while (value = this._pendingWrites.shift()) {
+  while (value = this._pendingWrites.shift())
     this._write(value, this._pendingWrites.shift());
-  }
 };
 
 Client.prototype._write = function (value, write) {
@@ -151,9 +155,8 @@ Client.prototype.connect = function () {
 
 // Disconnects from Redis.
 Client.prototype.disconnect = function () {
-  if (this.connection) {
+  if (this.connection)
     this.connection.end();
-  }
 };
 
 // Issues the given Redis command to the server with the given arguments

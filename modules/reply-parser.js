@@ -1,16 +1,16 @@
 var util = require('util');
-var events = require('events');
+var EventEmitter = require('events').EventEmitter;
 var hiredis = require('hiredis');
 
 module.exports = ReplyParser;
 
 function ReplyParser(returnBuffers) {
-  events.EventEmitter.call(this);
+  EventEmitter.call(this);
   this.returnBuffers = returnBuffers || false;
   this.reset();
 }
 
-util.inherits(ReplyParser, events.EventEmitter);
+util.inherits(ReplyParser, EventEmitter);
 
 ReplyParser.prototype.reset = function () {
   this.reader = new hiredis.Reader({

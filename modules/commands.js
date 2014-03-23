@@ -1,7 +1,4 @@
-var _slice = Array.prototype.slice;
-var commands = module.exports;
-
-[
+var commands = [
   // keys
   'del', 'dump', 'exists', 'expire', 'expireat', 'keys', 'migrate', 'move',
   'object', 'persist', 'pexpire', 'pexpireat', 'pttl', 'randomkey', 'rename',
@@ -35,9 +32,12 @@ var commands = module.exports;
   'bgrewriteaof', 'bgsave', 'client', 'config', 'dbsize', 'debug', 'flushall',
   'flushdb', 'info', 'lastsave', 'monitor', 'save', 'shutdown', 'slaveof',
   'slowlog', 'sync', 'time'
-].forEach(function (command) {
-  var upperCommand = command.toUpperCase();
-  commands[command] = commands[upperCommand] = function () {
+];
+
+var _slice = Array.prototype.slice;
+
+commands.forEach(function (command) {
+  exports[command] = function () {
     return this.send(command, _slice.call(arguments, 0));
   };
 });
@@ -45,12 +45,12 @@ var commands = module.exports;
 /* overrides */
 
 // Parse the reply from INFO into a hash.
-commands.info = function (section) {
+exports.info = function (section) {
   return this.send('info', _slice.call(arguments, 0)).then(parseInfo);
 };
 
 // Set the client's password property to the given value on AUTH.
-commands.auth = function (password) {
+exports.auth = function (password) {
   var self = this;
   return this.send('auth', [ password ]).then(function (reply) {
     self.password = password;
@@ -59,37 +59,37 @@ commands.auth = function (password) {
 };
 
 // Set the client's database property to the database number on SELECT.
-commands.select = function (database) {
+exports.select = function (database) {
   this.database = database;
   return this.send('select', [ database ]);
 };
 
 // Set the client's isMonitor property to true on MONITOR.
-commands.monitor = function () {
+exports.monitor = function () {
   this.isMonitor = true;
   return this.send('monitor');
 };
 
 // Optionally accept a hash as the only argument to MSET.
-commands.mset = function (hash) {
+exports.mset = function (hash) {
   var args = (typeof hash === 'object') ? appendHashToArray(hash, []) : _slice.call(arguments, 0);
   return this.send('mset', args);
 };
 
 // Optionally accept a hash as the only argument to MSETNX.
-commands.msetnx = function (hash) {
+exports.msetnx = function (hash) {
   var args = (typeof hash === 'object') ? appendHashToArray(hash, []) : _slice.call(arguments, 0);
   return this.send('msetnx', args);
 };
 
 // Optionally accept a hash as the first argument to HMSET after the key.
-commands.hmset = function (key, hash) {
+exports.hmset = function (key, hash) {
   var args = (typeof hash === 'object') ? appendHashToArray(hash, [ key ]) : _slice.call(arguments, 0);
   return this.send('hmset', args);
 };
 
 // Make a hash from the result of HGETALL.
-commands.hgetall = function () {
+exports.hgetall = function () {
   return this.send('hgetall', _slice.call(arguments, 0)).then(makeHashFromArray);
 };
 
@@ -97,9 +97,8 @@ commands.hgetall = function () {
 
 function appendHashToArray(hash, array) {
   for (var field in hash) {
-    if (hash.hasOwnProperty(field)) {
+    if (hash.hasOwnProperty(field))
       array.push(field, hash[field]);
-    }
   }
 
   return array;
@@ -108,9 +107,8 @@ function appendHashToArray(hash, array) {
 function makeHashFromArray(array) {
   var hash = {};
 
-  for (var i = 0, len = array.length; i < len; i += 2) {
+  for (var i = 0, len = array.length; i < len; i += 2)
     hash[array[i]] = array[i + 1];
-  }
 
   return hash;
 }
