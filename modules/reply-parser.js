@@ -4,6 +4,10 @@ var hiredis = require('hiredis');
 
 module.exports = ReplyParser;
 
+/**
+ * A thin wrapper for the hiredis library that parses responses from Redis
+ * and emits "reply" and "error" events.
+ */
 function ReplyParser(returnBuffers) {
   EventEmitter.call(this);
   this.returnBuffers = returnBuffers || false;

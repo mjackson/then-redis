@@ -1,3 +1,4 @@
+// See http://redis.io/commands
 var commands = [
   // keys
   'del', 'dump', 'exists', 'expire', 'expireat', 'keys', 'migrate', 'move',
@@ -46,7 +47,7 @@ commands.forEach(function (command) {
 
 // Parse the reply from INFO into a hash.
 exports.info = function (section) {
-  return this.send('info', _slice.call(arguments, 0)).then(parseInfo);
+  return this.send('info', _slice.call(arguments, 0)).then(_parseInfo);
 };
 
 // Set the client's password property to the given value on AUTH.
@@ -72,30 +73,45 @@ exports.monitor = function () {
 
 // Optionally accept a hash as the only argument to MSET.
 exports.mset = function (hash) {
-  var args = (typeof hash === 'object') ? appendHashToArray(hash, []) : _slice.call(arguments, 0);
+  var args = (typeof hash === 'object') ? _appendHashToArray(hash, []) : _slice.call(arguments, 0);
   return this.send('mset', args);
 };
 
 // Optionally accept a hash as the only argument to MSETNX.
 exports.msetnx = function (hash) {
-  var args = (typeof hash === 'object') ? appendHashToArray(hash, []) : _slice.call(arguments, 0);
+  var args = (typeof hash === 'object') ? _appendHashToArray(hash, []) : _slice.call(arguments, 0);
   return this.send('msetnx', args);
 };
 
 // Optionally accept a hash as the first argument to HMSET after the key.
 exports.hmset = function (key, hash) {
-  var args = (typeof hash === 'object') ? appendHashToArray(hash, [ key ]) : _slice.call(arguments, 0);
+  var args = (typeof hash === 'object') ? _appendHashToArray(hash, [ key ]) : _slice.call(arguments, 0);
   return this.send('hmset', args);
 };
 
 // Make a hash from the result of HGETALL.
 exports.hgetall = function () {
-  return this.send('hgetall', _slice.call(arguments, 0)).then(makeHashFromArray);
+  return this.send('hgetall', _slice.call(arguments, 0)).then(_makeHashFromArray);
 };
 
 /* helpers */
 
-function appendHashToArray(hash, array) {
+function _parseInfo(info) {
+  var hash = {};
+
+  info.split('\r\n').forEach(function (line) {
+    var index = line.indexOf(':');
+    
+    if (index !== -1) {
+      var name = line.substring(0, index);
+      hash[name] = line.substring(index + 1);
+    }
+  });
+
+  return hash;
+}
+
+function _appendHashToArray(hash, array) {
   for (var field in hash) {
     if (hash.hasOwnProperty(field))
       array.push(field, hash[field]);
@@ -104,25 +120,11 @@ function appendHashToArray(hash, array) {
   return array;
 }
 
-function makeHashFromArray(array) {
+function _makeHashFromArray(array) {
   var hash = {};
 
   for (var i = 0, len = array.length; i < len; i += 2)
     hash[array[i]] = array[i + 1];
-
-  return hash;
-}
-
-function parseInfo(info) {
-  var hash = {};
-
-  info.split('\r\n').forEach(function (line) {
-    var index = line.indexOf(':');
-    if (index !== -1) {
-      var name = line.substring(0, index);
-      hash[name] = line.substring(index + 1);
-    }
-  });
 
   return hash;
 }

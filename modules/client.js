@@ -7,6 +7,19 @@ var ReplyParser = require('./reply-parser');
 
 module.exports = Client;
 
+/**
+ * A small Redis client that returns promises for all operations.
+ *
+ * Example:
+ *
+ *   var promise = db.set('a-key', 'my value').then(function (value) {
+ *     return db.get('a-key');
+ *   });
+ *   
+ *   promise.then(function (value) {
+ *     assert.equal(value, 'my value');
+ *   });
+ */
 function Client(options) {
   EventEmitter.call(this);
 
@@ -61,18 +74,14 @@ Client.prototype._setupParser = function () {
 };
 
 Client.prototype._handleReply = function (reply) {
-  if (isMessageReply(reply)) {
-    this.emit.apply(this, reply);
-    return;
-  }
+  if (_isMessageReply(reply))
+    return this.emit.apply(this, reply);
 
   var value = this._commandValues.shift();
 
   if (value) {
-    if (this.returnBuffers) {
-      value.resolve(reply);
-      return;
-    }
+    if (this.returnBuffers)
+      return value.resolve(reply);
 
     if (reply && reply.constructor === Error) {
       value.reject(reply);
@@ -82,9 +91,9 @@ Client.prototype._handleReply = function (reply) {
 
     // (pun)subscribe can generate many replies. The first
     // one is returned. All are emitted as events.
-    if (isSubReply(reply))
+    if (_isSubReply(reply))
       this.emit.apply(this, reply);
-  } else if (isSubReply(reply)) {
+  } else if (_isSubReply(reply)) {
     this.emit.apply(this, reply);
   } else if (this.isMonitor) {
     this.emit('monitor', reply);
@@ -110,8 +119,10 @@ Client.prototype._write = function (value, write) {
   this.connection.write(write);
 };
 
-// Connects to Redis. Returns the result of AUTH and SELECT.
-// If neither are needed, this value will always be ["OK", "OK"].
+/**
+ * Connects to Redis. Returns the result of AUTH and SELECT.
+ * If neither are needed, this value will always be ["OK", "OK"].
+ */
 Client.prototype.connect = function () {
   if (!this._connectValue) {
     this._connectValue = RSVP.defer();
@@ -155,14 +166,18 @@ Client.prototype.connect = function () {
   return this._connectValue.promise;
 };
 
-// Disconnects from Redis.
+/**
+ * Disconnects from Redis.
+ */
 Client.prototype.disconnect = function () {
   if (this.connection)
     this.connection.end();
 };
 
-// Issues the given Redis command to the server with the given arguments
-// and returns a promise for the reply.
+/**
+ * Issues the given Redis command to the server with the given arguments
+ * and returns a promise for the reply.
+ */
 Client.prototype.send = function (command, args) {
   var value = RSVP.defer();
   var numArgs = args ? args.length : 0;
@@ -201,11 +216,13 @@ for (var command in commands) {
 /* helpers */
 
 var messageTypes = { message: true, pmessage: true };
-function isMessageReply(reply) {
+
+function _isMessageReply(reply) {
   return reply && messageTypes[reply[0]];
 }
 
 var subReplyTypes = { subscribe: true, unsubscribe: true, psubscribe: true, punsubscribe: true };
-function isSubReply(reply) {
+
+function _isSubReply(reply) {
   return reply && subReplyTypes[reply[0]];
 }
