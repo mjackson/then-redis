@@ -5,6 +5,8 @@ var EventEmitter = require('events').EventEmitter;
 var RSVP = require('rsvp');
 var ReplyParser = require('./reply-parser');
 
+var DEFAULT_URL = 'tcp://127.0.0.1:6379';
+
 module.exports = Client;
 
 /**
@@ -23,7 +25,7 @@ module.exports = Client;
 function Client(options) {
   EventEmitter.call(this);
 
-  options = options || process.env.REDIS_URL || 'tcp://127.0.0.1:6379';
+  options = options || process.env.REDIS_URL || DEFAULT_URL;
 
   if (typeof options === 'string') {
     var parsed = url.parse(options);
