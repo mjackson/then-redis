@@ -2,8 +2,21 @@ var url = require('url');
 var net = require('net');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-var RSVP = require('rsvp');
+var Promise = require('bluebird');
 var ReplyParser = require('./reply-parser');
+
+function defer() {
+  var resolve, reject;
+  var promise = new Promise(function() {
+    resolve = arguments[0];
+    reject = arguments[1];
+  });
+  return {
+    resolve: resolve,
+    reject: reject,
+    promise: promise
+  };
+}
 
 var DEFAULT_URL = 'tcp://127.0.0.1:6379';
 
@@ -127,7 +140,7 @@ Client.prototype._write = function (value, write) {
  */
 Client.prototype.connect = function () {
   if (!this._connectValue) {
-    this._connectValue = RSVP.defer();
+    this._connectValue = defer();
 
     var connection = net.createConnection(this.port, this.host);
     connection.setNoDelay(this.noDelay);
@@ -143,7 +156,7 @@ Client.prototype.connect = function () {
       var selectValue = self.database ? self.select(self.database) : 'OK';
       self._flushPendingWrites();
 
-      self._connectValue.resolve(RSVP.all([ authValue, selectValue ]));
+      self._connectValue.resolve(Promise.all([ authValue, selectValue ]));
     });
 
     connection.on('error', function (error) {
@@ -181,7 +194,7 @@ Client.prototype.disconnect = function () {
  * and returns a promise for the reply.
  */
 Client.prototype.send = function (command, args) {
-  var value = RSVP.defer();
+  var value = defer();
   var numArgs = args ? args.length : 0;
   var write = '*' + (1 + numArgs) + '\r\n';
 

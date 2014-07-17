@@ -11,7 +11,7 @@
     "url": "git://github.com/mjijackson/then-redis.git"
   },
   "dependencies": {
-    "rsvp": "~3.0.6",
+    "bluebird": "^2.2.2",
     "hiredis": "~0.1.16"
   },
   "devDependencies": {

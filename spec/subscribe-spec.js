@@ -1,5 +1,5 @@
 require('./helper');
-var RSVP = require('rsvp');
+var Promise = require('bluebird');
 
 describe('subscribe', function () {
   var subscriber;
@@ -54,11 +54,11 @@ describe('subscribe', function () {
         if (channel === 'b') bReceivedMessages.push(message);
       });
 
-      return RSVP.all([
+      return Promise.all([
         subscriber.subscribe('a'),
         subscriber.subscribe('b')
       ]).then(function () {
-        return RSVP.all([
+        return Promise.all([
           sendMessages('a', aSentMessages),
           sendMessages('b', bSentMessages)
         ]).then(waitForDelivery);

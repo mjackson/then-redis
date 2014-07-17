@@ -1,9 +1,9 @@
 require('./helper');
-var RSVP = require('rsvp');
+var Promise = require('bluebird');
 
 describe('sdiff', function () {
   beforeEach(function () {
-    return RSVP.all([
+    return Promise.all([
       db.sadd('set-one', 1, 2, 3, 4),
       db.sadd('set-two', 3, 4, 5, 6),
       db.sadd('set-three', 6, 7, 8)
