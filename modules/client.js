@@ -2,8 +2,21 @@ var url = require('url');
 var net = require('net');
 var util = require('util');
 var EventEmitter = require('events').EventEmitter;
-var RSVP = require('rsvp');
+var Promise = require('bluebird');
 var ReplyParser = require('./reply-parser');
+
+function defer() {
+  var resolve, reject;
+  var promise = new Promise(function() {
+    resolve = arguments[0];
+    reject = arguments[1];
+  });
+  return {
+    resolve: resolve,
+    reject: reject,
+    promise: promise
+  };
+}
 
 var DEFAULT_URL = 'tcp://127.0.0.1:6379';
 
@@ -127,45 +140,46 @@ Client.prototype._write = function (value, write) {
  */
 Client.prototype.connect = function () {
   if (!this._connectValue) {
-    this._connectValue = RSVP.defer();
-
-    var connection = net.createConnection(this.port, this.host);
-    connection.setNoDelay(this.noDelay);
-    connection.setTimeout(this.timeout);
-
     var self = this;
 
-    connection.on('connect', function () {
-      self.connection = connection;
+    this._connectValue = new Promise(function (resolve, reject) {
+      var connection = net.createConnection(self.port, self.host);
+      connection.setNoDelay(self.noDelay);
+      connection.setTimeout(self.timeout);
 
-      // Write AUTH and SELECT before flushing pending writes, if needed.
-      var authValue = self.password ? self.auth(self.password) : 'OK';
-      var selectValue = self.database ? self.select(self.database) : 'OK';
-      self._flushPendingWrites();
 
-      self._connectValue.resolve(RSVP.all([ authValue, selectValue ]));
-    });
+      connection.on('connect', function () {
+        self.connection = connection;
 
-    connection.on('error', function (error) {
-      if (self.connection)
-        self._flushError(error);
-      
-      self._connectValue.reject(error);
-    });
+        // Write AUTH and SELECT before flushing pending writes, if needed.
+        var authValue = self.password ? self.auth(self.password) : 'OK';
+        var selectValue = self.database ? self.select(self.database) : 'OK';
+        self._flushPendingWrites();
 
-    connection.on('data', function (chunk) {
-      self.parser.exec(chunk);
-    });
+        resolve(Promise.all([ authValue, selectValue ]));
+      });
 
-    connection.on('close', function () {
-      delete self._connectValue;
-      delete self.connection;
-      self._flushError(new Error('The connection was closed'));
-      self.emit('close');
+      connection.on('error', function (error) {
+        if (self.connection)
+          self._flushError(error);
+        
+        reject(error);
+      });
+
+      connection.on('data', function (chunk) {
+        self.parser.exec(chunk);
+      });
+
+      connection.on('close', function () {
+        delete self._connectValue;
+        delete self.connection;
+        self._flushError(new Error('The connection was closed'));
+        self.emit('close');
+      });
     });
   }
 
-  return this._connectValue.promise;
+  return this._connectValue;
 };
 
 /**
@@ -181,7 +195,7 @@ Client.prototype.disconnect = function () {
  * and returns a promise for the reply.
  */
 Client.prototype.send = function (command, args) {
-  var value = RSVP.defer();
+  var value = defer();
   var numArgs = args ? args.length : 0;
   var write = '*' + (1 + numArgs) + '\r\n';
 

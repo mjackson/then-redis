@@ -19,10 +19,8 @@ assertMatch = function (string, regexp, message) {
   assert(regexp.test(string), message);
 };
 
-var RSVP = require('rsvp');
+var Promise = require('bluebird');
 
 wait = function (ms) {
-  var deferred = RSVP.defer();
-  setTimeout(deferred.resolve, ms);
-  return deferred.promise;
+  return Promise.delay(ms);
 };

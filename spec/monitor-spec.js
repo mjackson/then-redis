@@ -1,5 +1,5 @@
 require('./helper');
-var RSVP = require('rsvp');
+var Promise = require('bluebird');
 
 describe('monitor', function () {
   var monitor;
@@ -25,7 +25,7 @@ describe('monitor', function () {
         expect(reply).toEqual('OK');
 
         // Send all commands in order.
-        var result = RSVP.resolve();
+        var result = Promise.resolve();
 
         sentCommands.forEach(function (commandArgs) {
           var command = commandArgs.shift();
