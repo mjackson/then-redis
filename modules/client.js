@@ -30,7 +30,7 @@ module.exports = Client;
  *   var promise = db.set('a-key', 'my value').then(function (value) {
  *     return db.get('a-key');
  *   });
- *   
+ *
  *   promise.then(function (value) {
  *     assert.equal(value, 'my value');
  *   });
@@ -42,7 +42,7 @@ function Client(options) {
 
   if (typeof options === 'string') {
     var parsed = url.parse(options);
-    
+
     options = {};
     options.host = parsed.hostname;
     options.port = parsed.port;
@@ -162,7 +162,7 @@ Client.prototype.connect = function () {
       connection.on('error', function (error) {
         if (self.connection)
           self._flushError(error);
-        
+
         reject(error);
       });
 
@@ -190,31 +190,47 @@ Client.prototype.disconnect = function () {
     this.connection.end();
 };
 
+
 /**
  * Issues the given Redis command to the server with the given arguments
  * and returns a promise for the reply.
  */
 Client.prototype.send = function (command, args) {
   var value = defer();
-  var numArgs = args ? args.length : 0;
-  var write = '*' + (1 + numArgs) + '\r\n';
 
-  write += '$' + Buffer.byteLength(command) + '\r\n' + command + '\r\n';
-
-  if (numArgs) {
-    var arg;
-    for (var i = 0; i < numArgs; ++i) {
-      arg = String(args[i]);
-      write += '$' + Buffer.byteLength(arg) + '\r\n' + arg + '\r\n';
-    }
+  if (args) {
+    args.unshift(command);
+  } else {
+    args = [command];
   }
 
-  write = new Buffer(write);
+  var numArgs = args.length;
+  var rawCommandParts = new Array(1+3*numArgs);
+
+  rawCommandParts[0] = new Buffer('*' + numArgs + '\r\n');
+  var rawCommandLength = rawCommandParts[0].length
+
+  var CRLFBuffer = new Buffer('\r\n');
+  for (var i = 0; i < numArgs; ++i) {
+    var argAsBuffer = args[i];
+    if (! Buffer.isBuffer(argAsBuffer)) {
+      argAsBuffer = new Buffer(String(argAsBuffer));
+    }
+    var header = new Buffer('$' + argAsBuffer.length + '\r\n');
+
+    rawCommandParts[i*3+1] = header;
+    rawCommandParts[i*3+2] = argAsBuffer;
+    rawCommandParts[i*3+3] = CRLFBuffer;
+
+    rawCommandLength += header.length + argAsBuffer.length + 2
+  }
+
+  var rawCommand = Buffer.concat(rawCommandParts,rawCommandLength);
 
   if (this.connection) {
-    this._write(value, write);
+    this._write(value, rawCommand);
   } else {
-    this._pendingWrites.push(value, write);
+    this._pendingWrites.push(value, rawCommand);
     this.connect(); // Automatically connect.
   }
 
