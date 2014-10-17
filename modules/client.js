@@ -30,7 +30,7 @@ module.exports = Client;
  *   var promise = db.set('a-key', 'my value').then(function (value) {
  *     return db.get('a-key');
  *   });
- *   
+ *
  *   promise.then(function (value) {
  *     assert.equal(value, 'my value');
  *   });
@@ -42,7 +42,7 @@ function Client(options) {
 
   if (typeof options === 'string') {
     var parsed = url.parse(options);
-    
+
     options = {};
     options.host = parsed.hostname;
     options.port = parsed.port;
@@ -162,7 +162,7 @@ Client.prototype.connect = function () {
       connection.on('error', function (error) {
         if (self.connection)
           self._flushError(error);
-        
+
         reject(error);
       });
 
@@ -190,31 +190,55 @@ Client.prototype.disconnect = function () {
     this.connection.end();
 };
 
+
 /**
  * Issues the given Redis command to the server with the given arguments
  * and returns a promise for the reply.
  */
 Client.prototype.send = function (command, args) {
   var value = defer();
-  var numArgs = args ? args.length : 0;
-  var write = '*' + (1 + numArgs) + '\r\n';
+  var rawArgs = args ? [command].concat(args) : [command];
+  var numArgs = rawArgs.length;
 
-  write += '$' + Buffer.byteLength(command) + '\r\n' + command + '\r\n';
+  var write = '*' + numArgs + '\r\n';
+  var writePos = 1 + Buffer.byteLength(String(numArgs)) + 2;
 
-  if (numArgs) {
-    var arg;
-    for (var i = 0; i < numArgs; ++i) {
-      arg = String(args[i]);
-      write += '$' + Buffer.byteLength(arg) + '\r\n' + arg + '\r\n';
+  var bufferArgs = [];
+  var buffer, bufferLength, offset;
+  for (var i = 0; i < numArgs; ++i) {
+    buffer = rawArgs[i];
+    if (buffer instanceof Buffer) {
+      bufferLength = buffer.length;
+      offset = writePos + Buffer.byteLength(String(bufferLength)) + 3;
+      bufferArgs.push([buffer,offset]);
+
+      // insert placeholder into string, will be replaced by buffer content later
+      buffer = '';
+      for (var j = 0; j < bufferLength; ++j) {
+        buffer += '#';
+      }
+    } else {
+      buffer = String(buffer);
+      bufferLength = Buffer.byteLength(buffer);
     }
+
+    write += '$' + bufferLength + '\r\n' + buffer + '\r\n';
+    writePos += 1 + Buffer.byteLength(String(bufferLength)) + bufferLength + 4;
   }
 
-  write = new Buffer(write);
+  var rawCommand = Buffer(write);
+
+  var numBufferArgs = bufferArgs.length;
+  for (var i = 0; i < numBufferArgs; ++i) {
+    buffer = bufferArgs[i][0];
+    offset = bufferArgs[i][1];
+    buffer.copy(rawCommand,offset);
+  }
 
   if (this.connection) {
-    this._write(value, write);
+    this._write(value, rawCommand);
   } else {
-    this._pendingWrites.push(value, write);
+    this._pendingWrites.push(value, rawCommand);
     this.connect(); // Automatically connect.
   }
 
