@@ -201,38 +201,38 @@ Client.prototype.send = function (command, args) {
   var numArgs = rawArgs.length;
 
   var write = '*' + numArgs + '\r\n';
-  var writePos = 1 + Buffer.byteLength(String(numArgs)) + 2
+  var writePos = 1 + Buffer.byteLength(String(numArgs)) + 2;
 
   var bufferArgs = [];
   var buffer, bufferLength, offset;
   for (var i = 0; i < numArgs; ++i) {
     buffer = rawArgs[i];
     if (buffer instanceof Buffer) {
-      bufferLength = buffer.length
-      offset = writePos + Buffer.byteLength(String(bufferLength)) + 3
-      bufferArgs.push([buffer,offset])
+      bufferLength = buffer.length;
+      offset = writePos + Buffer.byteLength(String(bufferLength)) + 3;
+      bufferArgs.push([buffer,offset]);
 
       // insert placeholder into string, will be replaced by buffer content later
-      buffer = ''
+      buffer = '';
       for (var j = 0; j < bufferLength; ++j) {
-        buffer += '#'
+        buffer += '#';
       }
     } else {
       buffer = String(buffer);
-      bufferLength = Buffer.byteLength(buffer)
+      bufferLength = Buffer.byteLength(buffer);
     }
 
     write += '$' + bufferLength + '\r\n' + buffer + '\r\n';
-    writePos += 1 + Buffer.byteLength(String(bufferLength)) + bufferLength + 4
+    writePos += 1 + Buffer.byteLength(String(bufferLength)) + bufferLength + 4;
   }
 
   var rawCommand = Buffer(write);
 
   var numBufferArgs = bufferArgs.length;
   for (var i = 0; i < numBufferArgs; ++i) {
-    buffer = bufferArgs[i][0]
-    offset = bufferArgs[i][1]
-    buffer.copy(rawCommand,offset)
+    buffer = bufferArgs[i][0];
+    offset = bufferArgs[i][1];
+    buffer.copy(rawCommand,offset);
   }
 
   if (this.connection) {

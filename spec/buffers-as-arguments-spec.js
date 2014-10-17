@@ -15,10 +15,10 @@ describe('when using buffers as arguments', function () {
     var target = null;
 
     beforeEach(function () {
-      var targetLength = Math.floor(Math.random() * 256)
-      target = new Buffer(targetLength)
+      var targetLength = 256;
+      target = new Buffer(targetLength);
       for(var i = 0; i < targetLength; i++) {
-        target[i] = Math.floor(Math.random() * 256)
+        target[i] = i;
       }
 
       return db.set('a-key', target);
