@@ -197,35 +197,43 @@ Client.prototype.disconnect = function () {
  */
 Client.prototype.send = function (command, args) {
   var value = defer();
+  var rawArgs = args ? [command].concat(args) : [command];
+  var numArgs = rawArgs.length;
 
-  if (args) {
-    args.unshift(command);
-  } else {
-    args = [command];
-  }
+  var write = '*' + numArgs + '\r\n';
+  var writePos = 1 + Buffer.byteLength(String(numArgs)) + 2
 
-  var numArgs = args.length;
-  var rawCommandParts = new Array(1+3*numArgs);
-
-  rawCommandParts[0] = new Buffer('*' + numArgs + '\r\n');
-  var rawCommandLength = rawCommandParts[0].length
-
-  var CRLFBuffer = new Buffer('\r\n');
+  var bufferArgs = [];
+  var buffer, bufferLength, offset;
   for (var i = 0; i < numArgs; ++i) {
-    var argAsBuffer = args[i];
-    if (! Buffer.isBuffer(argAsBuffer)) {
-      argAsBuffer = new Buffer(String(argAsBuffer));
+    buffer = rawArgs[i];
+    if (buffer instanceof Buffer) {
+      bufferLength = buffer.length
+      offset = writePos + Buffer.byteLength(String(bufferLength)) + 3
+      bufferArgs.push([buffer,offset])
+
+      // insert placeholder into string, will be replaced by buffer content later
+      buffer = ''
+      for (var j = 0; j < bufferLength; ++j) {
+        buffer += '#'
+      }
+    } else {
+      buffer = String(buffer);
+      bufferLength = Buffer.byteLength(buffer)
     }
-    var header = new Buffer('$' + argAsBuffer.length + '\r\n');
 
-    rawCommandParts[i*3+1] = header;
-    rawCommandParts[i*3+2] = argAsBuffer;
-    rawCommandParts[i*3+3] = CRLFBuffer;
-
-    rawCommandLength += header.length + argAsBuffer.length + 2
+    write += '$' + bufferLength + '\r\n' + buffer + '\r\n';
+    writePos += 1 + Buffer.byteLength(String(bufferLength)) + bufferLength + 4
   }
 
-  var rawCommand = Buffer.concat(rawCommandParts,rawCommandLength);
+  var rawCommand = Buffer(write);
+
+  var numBufferArgs = bufferArgs.length;
+  for (var i = 0; i < numBufferArgs; ++i) {
+    buffer = bufferArgs[i][0]
+    offset = bufferArgs[i][1]
+    buffer.copy(rawCommand,offset)
+  }
 
   if (this.connection) {
     this._write(value, rawCommand);
