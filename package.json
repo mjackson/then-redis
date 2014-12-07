@@ -15,7 +15,7 @@
     "when": "^3.6.3"
   },
   "devDependencies": {
-    "expect": "0.1.1",
+    "expect": "^1.1.0",
     "mocha": "^2.0.1"
   },
   "keywords": [
