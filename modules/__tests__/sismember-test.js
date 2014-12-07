@@ -17,4 +17,4 @@ describe('sismember', function () {
       expect(reply).toBe(0);
     });
   });
-})
+});

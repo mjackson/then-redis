@@ -16,6 +16,7 @@
   },
   "devDependencies": {
     "expect": "^1.1.0",
+    "jshint": "^2.5.10",
     "mocha": "^2.0.1"
   },
   "keywords": [
