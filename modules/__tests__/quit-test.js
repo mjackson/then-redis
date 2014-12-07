@@ -1,4 +1,4 @@
-require('./helper');
+var redis = require('../index');
 
 describe('quit', function () {
   var quitter;
@@ -6,8 +6,8 @@ describe('quit', function () {
     quitter = redis.createClient();
   });
 
-  it('emits the "close" event', function (done) {
-    quitter.on('close', done);
+  it('emits the "end" event', function (done) {
+    quitter.on('end', done);
     quitter.quit();
   });
 });

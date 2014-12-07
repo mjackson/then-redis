@@ -1,4 +1,5 @@
-require('./helper');
+var expect = require('expect');
+var db = require('./db');
 
 describe('msetnx', function () {
   describe('when some of the keys already exist', function () {

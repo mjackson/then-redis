@@ -1,4 +1,5 @@
-require('./helper');
+var expect = require('expect');
+var db = require('./db');
 
 describe('sadd', function () {
   it('returns the number of items added to a set', function () {

@@ -1,5 +1,7 @@
-require('./helper');
-var RSVP = require('rsvp');
+var expect = require('expect');
+var redis = require('../index');
+var Promise = require('../utils/Promise');
+var db = require('./db');
 
 describe('subscribe', function () {
   var subscriber;
@@ -54,11 +56,11 @@ describe('subscribe', function () {
         if (channel === 'b') bReceivedMessages.push(message);
       });
 
-      return RSVP.all([
+      return Promise.all([
         subscriber.subscribe('a'),
         subscriber.subscribe('b')
       ]).then(function () {
-        return RSVP.all([
+        return Promise.all([
           sendMessages('a', aSentMessages),
           sendMessages('b', bSentMessages)
         ]).then(waitForDelivery);
@@ -72,7 +74,8 @@ describe('subscribe', function () {
   });
 });
 
-// Waits for pubsub messages to be delivered.
 function waitForDelivery() {
-  return wait(10);
+  return new Promise(function (resolve, reject) {
+    setTimeout(resolve, 10);
+  });
 }
