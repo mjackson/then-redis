@@ -1,5 +1,7 @@
-require('./helper');
-var Promise = require('bluebird');
+var expect = require('expect');
+var redis = require('../index');
+var Promise = require('../utils/Promise');
+var db = require('./db');
 
 describe('subscribe', function () {
   var subscriber;
@@ -72,7 +74,8 @@ describe('subscribe', function () {
   });
 });
 
-// Waits for pubsub messages to be delivered.
 function waitForDelivery() {
-  return wait(10);
+  return new Promise(function (resolve, reject) {
+    setTimeout(resolve, 10);
+  });
 }

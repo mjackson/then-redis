@@ -1,4 +1,6 @@
-require('./helper');
+var assert = require('assert');
+var redis = require('../index');
+var db = require('./db');
 
 describe('when a server requires auth', function () {
   var password = 'secret';
@@ -13,27 +15,23 @@ describe('when a server requires auth', function () {
   });
 
   describe('a new client with the correct password', function () {
-    var newClient;
+    var client;
     beforeEach(function () {
-      newClient = redis.createClient({ host: db.host, port: db.port, password: password });
+      client = redis.createClient({ host: db.host, port: db.port, password: password });
     });
 
     it('does not throw when commands are issued', function () {
-      return newClient.get('a-key');
+      return client.get('a-key');
     });
   });
 
   describe('a new client with the wrong password', function () {
-    var newClient;
-    beforeEach(function () {
-      newClient = redis.createClient({ host: db.host, port: db.port });
-    });
+    it('throws when commands are issued', function (done) {
+      var client = redis.createClient({ host: db.host, port: db.port });
 
-    it('throws when commands are issued', function () {
-      return newClient.get('a-key').then(function (value) {
-        assert(false, 'client issued command without auth');
-      }, function (error) {
+      client.on('error', function (error) {
         assert(error);
+        done();
       });
     });
   });

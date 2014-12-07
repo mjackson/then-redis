@@ -1,5 +1,6 @@
-require('./helper');
-var Promise = require('bluebird');
+var expect = require('expect');
+var Promise = require('../utils/Promise');
+var db = require('./db');
 
 describe('sunion', function () {
   beforeEach(function () {
