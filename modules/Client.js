@@ -109,7 +109,7 @@ Client.prototype.send = function (command, args) {
   var client = this._redisClient;
 
   var promise = new Promise(function (resolve, reject) {
-    client.send_command(command, args, function (error, value) {
+    client.send_command(command, args || [], function (error, value) {
       if (error) {
         reject(error);
       } else {
