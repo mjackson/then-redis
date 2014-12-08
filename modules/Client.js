@@ -116,15 +116,19 @@ Client.prototype.send = function (command, args) {
     });
   });
 
-  if (command === 'info')
-    promise = promise.then(parseInfo);
-
   return promise;
 };
 
 var slice = Array.prototype.slice;
 
 Object.defineProperties(Client.prototype, {
+
+  // Parse the result of INFO.
+  info: {
+    value: function () {
+      return this.send('info').then(parseInfo);
+    }
+  },
 
   // Optionally accept a hash as the only argument to MSET.
   mset: {
