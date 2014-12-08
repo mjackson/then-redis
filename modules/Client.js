@@ -82,6 +82,10 @@ function Client(options) {
 
 require('util').inherits(Client, EventEmitter);
 
+Client.usePromise = function (NewPromise) {
+  Promise = NewPromise;
+}
+
 Client.prototype.send = function (command, args) {
   var client = this._redisClient;
 
