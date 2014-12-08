@@ -5,6 +5,17 @@ var appendHashToArray = require('./utils/appendHashToArray');
 var parseInfo = require('./utils/parseInfo');
 var Promise = require('./utils/Promise');
 
+var PROPERTIES = [
+  // redis properties, forwarded read-only.
+  'connection_id',
+  'connected',
+  'ready',
+  'connections',
+  'options',
+  'pub_sub_mode',
+  'selected_db'
+];
+
 var EVENTS = [
   // Connection events.
   'ready',
@@ -26,17 +37,6 @@ var EVENTS = [
   'unsubscribe',
   'punsubscribe'
 ];
-
-var PROPERTIES = [
-  // redis properties, forwarded read-only
-  'connection_id',
-  'connected',
-  'ready',
-  'connections',
-  'options',
-  'pub_sub_mode',
-  'selected_db'
-]
 
 /**
  * A small Redis client that returns promises for all operations.
@@ -83,22 +83,24 @@ function Client(options) {
   if (options.password)
     options.auth_pass = options.password;
 
-  var redisClient = redis.createClient(this.port, this.host, options);
+  if (options.returnBuffers)
+    options.return_buffers = true;
 
-  EVENTS.forEach(function (eventName) {
-    redisClient.on(eventName, this.emit.bind(this, eventName));
-  }, this);
+  var redisClient = redis.createClient(this.port, this.host, options);
 
   PROPERTIES.forEach(function (propertyName) {
     Object.defineProperty(this, propertyName, {
-      get:function () {
+      get: function () {
         return redisClient[propertyName]
       }
     });
   }, this);
 
-  this._redisClient = redisClient;
+  EVENTS.forEach(function (eventName) {
+    redisClient.on(eventName, this.emit.bind(this, eventName));
+  }, this);
 
+  this._redisClient = redisClient;
 }
 
 require('util').inherits(Client, EventEmitter);
