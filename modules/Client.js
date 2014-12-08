@@ -107,11 +107,9 @@ Client.usePromise = function (NewPromise) {
   Promise = NewPromise;
 }
 
-Client.prototype.send = function (command, args) {
-  var client = this._redisClient;
-
+Client.prototype._wrapAsPromise = function (clientMethod) {
   var promise = new Promise(function (resolve, reject) {
-    client.send_command(command, args, function (error, value) {
+    clientMethod(function (error, value) {
       if (error) {
         reject(error);
       } else {
@@ -120,10 +118,12 @@ Client.prototype.send = function (command, args) {
     });
   });
 
-  if (command === 'info')
-    promise = promise.then(parseInfo);
-
   return promise;
+};
+
+Client.prototype.send = function (command, args) {
+  var client = this._redisClient;
+  return this._wrapAsPromise(client.send_command.bind(client,command,args));
 };
 
 var slice = Array.prototype.slice;
@@ -152,7 +152,24 @@ Object.defineProperties(Client.prototype, {
       var args = (typeof hash === 'object') ? appendHashToArray(hash, [ key ]) : slice.call(arguments, 0);
       return this.send('hmset', args);
     }
+  },
+
+  // Parses the info
+  info: {
+    value: function () {
+      var client = this._redisClient;
+      return this._wrapAsPromise(client.info.bind(client)).then(parseInfo);
+    }
+  },
+
+  // Assures that select attributes are preserved
+  select: {
+    value: function (db) {
+      var client = this._redisClient;
+      return this._wrapAsPromise(client.select.bind(client,db));
+    }
   }
+
 
 });
 
@@ -165,6 +182,7 @@ require('redis/lib/commands').forEach(function (command) {
 
   Object.defineProperty(Client.prototype, command, {
     value: function () {
+
       return this.send(command, slice.call(arguments, 0));
     }
   });
