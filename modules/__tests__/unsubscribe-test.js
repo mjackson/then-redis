@@ -46,6 +46,10 @@ describe('when subscribed to many channels', function () {
     it('emits all channel names', function () {
       expect(unsubscribedChannels.sort()).toEqual(channels.sort());
     });
+
+    it('unsets the pub_sub_mode-flag', function () {
+      expect(subscriber.pub_sub_mode).toEqual(false);
+    });
   });
 });
 
