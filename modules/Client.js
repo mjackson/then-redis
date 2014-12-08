@@ -41,6 +41,14 @@ var EVENTS = [
 /**
  * A small Redis client that returns promises for all operations.
  *
+ * Supported options are:
+ *
+ * - port             The TCP port to use (defaults to 6379)
+ * - host             The hostname of the Redis host (defaults to 127.0.0.1)
+ * - database         The database # to use (defaults to 0)
+ * - password         The password to use for AUTH
+ * - returnBuffers    True to return buffers (defaults to false)
+ *
  * Example:
  *
  *   var redis = require('then-redis');
