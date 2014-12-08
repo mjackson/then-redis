@@ -99,7 +99,7 @@ function Client(options) {
   PROPERTIES.forEach(function (propertyName) {
     Object.defineProperty(this, propertyName, {
       get: function () {
-        return redisClient[propertyName]
+        return redisClient[propertyName];
       }
     });
   }, this);
