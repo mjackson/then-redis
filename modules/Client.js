@@ -101,6 +101,9 @@ function Client(options) {
   }, this);
 
   this._redisClient = redisClient;
+
+  if (options.database)
+    this.select(options.database);
 }
 
 require('util').inherits(Client, EventEmitter);
