@@ -96,14 +96,6 @@ function Client(options) {
 
   var redisClient = redis.createClient(this.port, this.host, options);
 
-  PROPERTIES.forEach(function (propertyName) {
-    Object.defineProperty(this, propertyName, {
-      get: function () {
-        return redisClient[propertyName];
-      }
-    });
-  }, this);
-
   EVENTS.forEach(function (eventName) {
     redisClient.on(eventName, this.emit.bind(this, eventName));
   }, this);
@@ -163,15 +155,34 @@ Object.defineProperties(Client.prototype, {
       var args = (typeof hash === 'object') ? appendHashToArray(hash, [ key ]) : slice.call(arguments, 0);
       return this.send('hmset', args);
     }
+  },
+
+  // Update the selected_db property of the client on SELECT.
+  select: {
+    value: function (db) {
+      var client = this._redisClient;
+      return this.send('select', [ db ]).then(function (value) {
+        client.selected_db = db;
+        return value;
+      });
+    }
   }
 
+});
+
+PROPERTIES.forEach(function (propertyName) {
+  Object.defineProperty(Client.prototype, propertyName, {
+    get: function () {
+      return this._redisClient[propertyName];
+    }
+  });
 });
 
 require('redis/lib/commands').forEach(function (command) {
   // Some commands have spaces in them, like CONFIG SET.
   command = command.split(' ')[0];
 
-  if (Client.prototype[command])
+  if (command in Client.prototype)
     return;
 
   Object.defineProperty(Client.prototype, command, {
