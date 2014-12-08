@@ -1,14 +1,14 @@
-require('./helper');
+var assert = require('assert');
+var expect = require('expect');
+var redis = require('../index');
 
 describe('when using buffers as arguments', function () {
   beforeEach(function () {
-    db.returnBuffers = true;
-    db._setupParser();
+    db = redis.createClient({ return_buffers: true });
   });
 
   afterEach(function () {
-    db.returnBuffers = false;
-    db._setupParser();
+    return db.flushdb();
   });
 
   describe('a bulk reply (using get)', function () {
