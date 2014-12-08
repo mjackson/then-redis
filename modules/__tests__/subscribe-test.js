@@ -40,6 +40,10 @@ describe('subscribe', function () {
     it('streams messages that are sent to that channel', function () {
       expect(receivedMessages).toEqual(sentMessages);
     });
+
+    it('sets the pub_sub_mode-flag', function () {
+      expect(subscriber.pub_sub_mode).toEqual(true);
+    });
   });
 
   describe('when subscribing to many channels', function () {

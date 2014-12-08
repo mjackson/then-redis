@@ -28,12 +28,14 @@ var EVENTS = [
 ];
 
 var PROPERTIES = [
-  // redis properties
+  // redis properties, forwarded read-only
   'connection_id',
   'connected',
   'ready',
   'connections',
-  'options'
+  'options',
+  'pub_sub_mode',
+  'selected_db'
 ]
 
 /**
