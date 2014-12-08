@@ -1,1 +1,1 @@
-module.exports = require('when/lib/Promise');
+module.exports = require('bluebird');

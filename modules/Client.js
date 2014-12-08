@@ -119,7 +119,7 @@ require('util').inherits(Client, EventEmitter);
 Client.prototype.send = function (command, args) {
   var client = this._redisClient;
 
-  var promise = new Promise(function (resolve, reject) {
+  return new Promise(function (resolve, reject) {
     client.send_command(command, args || [], function (error, value) {
       if (error) {
         reject(error);
@@ -128,8 +128,6 @@ Client.prototype.send = function (command, args) {
       }
     });
   });
-
-  return promise;
 };
 
 var slice = Array.prototype.slice;

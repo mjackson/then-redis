@@ -11,8 +11,8 @@
     "url": "git://github.com/mjackson/then-redis.git"
   },
   "dependencies": {
-    "redis": "^0.12.1",
-    "when": "^3.6.3"
+    "bluebird": "^2.3.11",
+    "redis": "^0.12.1"
   },
   "devDependencies": {
     "expect": "^1.1.0",
