@@ -1,5 +1,6 @@
-require('./helper');
 var crypto = require('crypto');
+var expect = require('expect');
+var db = require('./db');
 
 describe('keys', function () {
   describe('when there are no keys', function () {

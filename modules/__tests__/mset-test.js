@@ -1,4 +1,5 @@
-require('./helper');
+var expect = require('expect');
+var db = require('./db');
 
 describe('mset', function () {
   describe('when given a list of fields/values', function () {

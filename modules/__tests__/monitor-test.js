@@ -1,5 +1,7 @@
-require('./helper');
-var Promise = require('bluebird');
+var expect = require('expect');
+var redis = require('../index');
+var Promise = require('../utils/Promise');
+var db = require('./db');
 
 describe('monitor', function () {
   var monitor;
@@ -8,17 +10,17 @@ describe('monitor', function () {
   });
 
   describe('when monitoring the database', function () {
-    var monitorMessages, sentCommands;
+    var monitorMessages, commands;
     beforeEach(function () {
       monitorMessages = [];
-      sentCommands = [
+      commands = [
         [ 'set', 'a', 5 ],
         [ 'incrby', 'a', 6 ],
         [ 'get', 'a' ]
       ];
 
-      monitor.on('monitor', function (message) {
-        monitorMessages.push(message);
+      monitor.on('monitor', function (time, args) {
+        monitorMessages.push(args);
       });
 
       return monitor.monitor().then(function (reply) {
@@ -27,10 +29,9 @@ describe('monitor', function () {
         // Send all commands in order.
         var result = Promise.resolve();
 
-        sentCommands.forEach(function (commandArgs) {
-          var command = commandArgs.shift();
+        commands.forEach(function (command) {
           result = result.then(function () {
-            return db.send(command, commandArgs);
+            return db.send(command[0], command.slice(1));
           });
         });
 
@@ -39,15 +40,17 @@ describe('monitor', function () {
     });
 
     it('receives a message for all commands in the order they are sent', function () {
-      expect(monitorMessages.length).toEqual(sentCommands.length);
-      monitorMessages.forEach(function (message, index) {
-        assertMatch(message, new RegExp('"' + sentCommands[index][0] + '"'));
+      expect(monitorMessages.length).toEqual(commands.length);
+
+      monitorMessages.forEach(function (args, index) {
+        expect(args).toEqual(commands[index]);
       });
     });
   });
 });
 
-// Waits for monitor messages to be delivered.
 function waitForDelivery() {
-  return wait(10);
+  return new Promise(function (resolve, reject) {
+    setTimeout(resolve, 10);
+  });
 }

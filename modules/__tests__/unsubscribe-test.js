@@ -1,4 +1,6 @@
-require('./helper');
+var expect = require('expect');
+var redis = require('../index');
+var db = require('./db');
 
 describe('when subscribed to many channels', function () {
   var channels, subscriber;
@@ -33,7 +35,9 @@ describe('when subscribed to many channels', function () {
 
       subscriber.on('unsubscribe', function (channel, numSubscriptions) {
         unsubscribedChannels.push(channel);
-        if (unsubscribedChannels.length === channels.length) done();
+
+        if (unsubscribedChannels.length === channels.length)
+          done();
       });
 
       subscriber.unsubscribe();
@@ -54,7 +58,7 @@ describe('when subscribed to no channels', function () {
   describe('unsubscribing from all channels', function () {
     it('returns null', function () {
       return subscriber.unsubscribe().then(function (reply) {
-        expect(reply).toEqual([ 'unsubscribe', null, 0 ]);
+        expect(reply).toEqual(null);
       });
     });
   });

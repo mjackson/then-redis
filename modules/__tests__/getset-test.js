@@ -1,4 +1,5 @@
-require('./helper');
+var expect = require('expect');
+var db = require('./db');
 
 describe('getset', function () {
   describe('when a key does not exist', function () {

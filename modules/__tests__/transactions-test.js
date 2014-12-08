@@ -1,4 +1,6 @@
-require('./helper');
+var assert = require('assert');
+var expect = require('expect');
+var db = require('./db');
 
 describe('transactions', function () {
   describe('when there is no error inside a transaction', function () {
@@ -19,7 +21,7 @@ describe('transactions', function () {
       db.incr('a');
       return db.exec().then(function (reply) {
         expect(reply.length).toEqual(2);
-        assert(reply[1] instanceof Error);
+        expect(reply[1]).toEqual('ERR value is not an integer or out of range');
       });
     });
   });
