@@ -9,6 +9,7 @@ var EVENTS = [
   // Connection events.
   'ready',
   'connect',
+  'reconnecting',
   'error',
   'end',
   'drain',
@@ -37,7 +38,7 @@ var EVENTS = [
  *   var promise = db.set('a-key', 'my value').then(function () {
  *     return db.get('a-key');
  *   });
- *   
+ *
  *   promise.then(function (value) {
  *     assert.equal(value, 'my value');
  *   });
@@ -49,7 +50,7 @@ function Client(options) {
 
   if (typeof options === 'string') {
     var parsed = url.parse(options);
-    
+
     options = {};
     options.host = parsed.hostname;
     options.port = parsed.port;
