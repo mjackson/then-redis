@@ -27,6 +27,15 @@ var EVENTS = [
   'punsubscribe'
 ];
 
+var PROPERTIES = [
+  // redis properties
+  'connection_id',
+  'connected',
+  'ready',
+  'connections',
+  'options'
+]
+
 /**
  * A small Redis client that returns promises for all operations.
  *
@@ -78,7 +87,16 @@ function Client(options) {
     redisClient.on(eventName, this.emit.bind(this, eventName));
   }, this);
 
+  PROPERTIES.forEach(function (propertyName) {
+    Object.defineProperty(this, propertyName, {
+      get:function () {
+        return redisClient[propertyName]
+      }
+    });
+  }, this);
+
   this._redisClient = redisClient;
+
 }
 
 require('util').inherits(Client, EventEmitter);
