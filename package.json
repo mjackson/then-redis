@@ -1,6 +1,6 @@
 {
   "name": "then-redis",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "A small, promise-based Redis client",
   "main": "modules/index.js",
   "scripts": {
@@ -12,12 +12,13 @@
   },
   "dependencies": {
     "redis": "^0.12.1",
-    "when": "^3.6.3"
+    "when": ">= 3.6.3"
   },
   "devDependencies": {
     "expect": "^1.1.0",
     "jshint": "^2.5.10",
-    "mocha": "^2.0.1"
+    "mocha": "^2.0.1",
+    "bluebird": ">= 2.3.11"
   },
   "keywords": [
     "redis",

@@ -88,6 +88,21 @@ Using [npm](https://www.npmjs.org/):
 
     $ npm install then-redis
 
+### Select Promise library
+
+The promise library defaults to [when.js](https://www.npmjs.org/package/when), but you can easily swith to another library, e.g. [bluebird](https://www.npmjs.org/package/bluebird):
+
+```js
+// Get the Promise constructor function of your custom library
+var BluebirdPromise = require('bluebird');
+
+var redis = require('then-redis');
+// tell then-redis to use that library in favor of when
+redis.usePromise(BluebirdPromise);
+
+var db = redis.createClient();
+```
+
 ### Issues
 
 Please file issues on the [issue tracker on GitHub](https://github.com/mjackson/then-redis/issues).

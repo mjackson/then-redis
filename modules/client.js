@@ -37,7 +37,7 @@ var EVENTS = [
  *   var promise = db.set('a-key', 'my value').then(function () {
  *     return db.get('a-key');
  *   });
- *   
+ *
  *   promise.then(function (value) {
  *     assert.equal(value, 'my value');
  *   });
@@ -49,7 +49,7 @@ function Client(options) {
 
   if (typeof options === 'string') {
     var parsed = url.parse(options);
-    
+
     options = {};
     options.host = parsed.hostname;
     options.port = parsed.port;
@@ -81,6 +81,10 @@ function Client(options) {
 }
 
 require('util').inherits(Client, EventEmitter);
+
+Client.usePromise = function (NewPromise) {
+  Promise = NewPromise;
+}
 
 Client.prototype.send = function (command, args) {
   var client = this._redisClient;
