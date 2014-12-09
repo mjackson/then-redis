@@ -161,9 +161,16 @@ Object.defineProperties(Client.prototype, {
   select: {
     value: function (db) {
       var client = this._redisClient;
-      return this.send('select', [ db ]).then(function (value) {
-        client.selected_db = db;
-        return value;
+
+      return new Promise(function (resolve, reject) {
+        // Need to use this so selected_db updates properly.
+        client.select(db, function (error, value) {
+          if (error) {
+            reject(error);
+          } else {
+            resolve(value);
+          }
+        });
       });
     }
   }
