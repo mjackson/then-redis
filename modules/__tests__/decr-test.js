@@ -1,4 +1,6 @@
-require('./helper');
+var assert = require('assert');
+var expect = require('expect');
+var db = require('./db');
 
 describe('decr', function () {
   describe('when a key does not exist', function () {
@@ -31,7 +33,7 @@ describe('decr', function () {
         assert(false, 'decr succeeded on a non-integer key');
       }, function (error) {
         assert(error);
-        assertMatch(error.message, /not an integer/);
+        expect(error.message).toMatch(/not an integer/);
       });
     });
   });
