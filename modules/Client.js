@@ -133,6 +133,14 @@ Object.defineProperties(Client.prototype, {
     }
   },
 
+  // Optionally accept an array as the only argument to MGET.
+  mget: {
+    value: function (keys) {
+      var args = Array.isArray(keys) ? keys : slice.call(arguments, 0);
+      return this.send('mget', args);
+    }
+  },
+
   // Optionally accept a hash as the only argument to MSET.
   mset: {
     value: function (hash) {
