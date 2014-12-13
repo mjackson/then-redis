@@ -10,7 +10,7 @@ describe('hmset', function () {
     });
   });
 
-  it('accepts a hash as the only argument', function () {
+  it('accepts a hash as the second argument', function () {
     db.hmset('my-key', { a: 'one', b: 'two' });
 
     return db.hgetall('my-key').then(function (hash) {
