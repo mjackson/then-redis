@@ -177,6 +177,16 @@ Object.defineProperties(Client.prototype, {
 
 });
 
+// Optionally accept an array as the first argument to LPUSH and RPUSH after the key.
+[ 'lpush', 'rpush' ].forEach(function (command) {
+  Object.defineProperty(Client.prototype, command, {
+    value: function (key, array) {
+      var args = Array.isArray(array) ? [ key ].concat(array) : slice.call(arguments, 0);
+      return this.send(command, args);
+    }
+  });
+});
+
 PROPERTIES.forEach(function (propertyName) {
   Object.defineProperty(Client.prototype, propertyName, {
     get: function () {
