@@ -212,7 +212,11 @@ require('redis/lib/commands').forEach(function (command) {
 
   Object.defineProperty(Client.prototype, command, {
     value: function () {
-      return this.send(command, slice.call(arguments, 0));
+      var args = slice.call(arguments, 0);
+      if(args.length && Array.isArray(args[0])) {
+        return this.send(command, args.shift().concat(args));
+      }
+      return this.send(command, args);
     }
   });
 });
