@@ -181,8 +181,15 @@ Object.defineProperties(Client.prototype, {
         });
       });
     }
-  }
+  },
 
+  // Optionally accept an array as the only argument to DEL.
+  del: {
+    value: function (keys) {
+      var args = Array.isArray(keys) ? keys : slice.call(arguments, 0);
+      return this.send('del', args);
+    }
+  }
 });
 
 // Optionally accept an array as the first argument to LPUSH and RPUSH after the key.
@@ -212,11 +219,7 @@ require('redis/lib/commands').forEach(function (command) {
 
   Object.defineProperty(Client.prototype, command, {
     value: function () {
-      var args = slice.call(arguments, 0);
-      if(args.length && Array.isArray(args[0])) {
-        return this.send(command, args.shift().concat(args));
-      }
-      return this.send(command, args);
+      return this.send(command, slice.call(arguments, 0));
     }
   });
 });
