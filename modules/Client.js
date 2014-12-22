@@ -181,8 +181,15 @@ Object.defineProperties(Client.prototype, {
         });
       });
     }
-  }
+  },
 
+  // Optionally accept an array as the only argument to DEL.
+  del: {
+    value: function (keys) {
+      var args = Array.isArray(keys) ? keys : slice.call(arguments, 0);
+      return this.send('del', args);
+    }
+  }
 });
 
 // Optionally accept an array as the first argument to LPUSH and RPUSH after the key.
