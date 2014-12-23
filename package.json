@@ -4,7 +4,7 @@
   "description": "A small, promise-based Redis client",
   "main": "modules/index.js",
   "scripts": {
-    "test": "jshint . && mocha modules/**/__tests__/*-test.js"
+    "test": "jshint . && mocha --reporter spec 'modules/**/__tests__/*-test.js'"
   },
   "repository": {
     "type": "git",
