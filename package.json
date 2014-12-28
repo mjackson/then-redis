@@ -11,10 +11,11 @@
     "url": "git://github.com/mjackson/then-redis.git"
   },
   "dependencies": {
-    "bluebird": "^2.3.11",
+    "native-or-bluebird": "1",
     "redis": "^0.12.1"
   },
   "devDependencies": {
+    "bluebird": "^2.4.3",
     "expect": "^1.1.0",
     "jshint": "^2.5.10",
     "mocha": "^2.0.1"
