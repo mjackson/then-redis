@@ -11,13 +11,16 @@
     "url": "git://github.com/mjackson/then-redis.git"
   },
   "dependencies": {
-    "bluebird": "^2.3.11",
-    "redis": "^0.12.1"
+    "bluebird": "^2.3.11"
   },
   "devDependencies": {
     "expect": "^1.1.0",
     "jshint": "^2.5.10",
-    "mocha": "^2.0.1"
+    "mocha": "^2.0.1",
+    "redis": "^0.12.1"
+  },
+  "peerDependencies": {
+    "redis": "^0.12.1"
   },
   "keywords": [
     "redis",
