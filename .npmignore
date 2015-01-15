@@ -1,1 +1,4 @@
-modules/**/__tests__
+.jshintignore
+.jshintrc
+.travis.yml
+tests
