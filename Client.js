@@ -180,16 +180,12 @@ Object.defineProperties(Client.prototype, {
 
 });
 
-Client.prototype.multi = function () {
-  var client = this._redisClient;
-
-  var multi = this._redisClient.multi();
-  var originalExec = multi.exec;
-  multi.exec = function () {
-    var self = this;
-
+Client.prototype.exec = function (multiFn) {
+  if (multiFn) {
+    var multi = this._redisClient.multi();
+    multiFn(multi);
     return new Promise(function (resolve, reject) {
-      originalExec.call(self, function (error, result) {
+      multi.exec(function (error, result) {
         if (error) {
           reject(error);
         } else {
@@ -197,11 +193,9 @@ Client.prototype.multi = function () {
         }
       });
     });
-  };
-
-  multi.EXEC = multi.exec;
-
-  return multi;
+  } else {
+    return this.send('exec');
+  }
 };
 
 // Optionally accept an array as the first argument to LPUSH and RPUSH after the key.
