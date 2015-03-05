@@ -67,35 +67,38 @@ function Client(options) {
   EventEmitter.call(this);
 
   options = options || process.env.REDIS_URL || 'tcp://127.0.0.1:6379';
-
   if (typeof options === 'string') {
     var parsed = url.parse(options);
 
-    options = {};
-    options.host = parsed.hostname;
-    options.port = parsed.port;
+    if (parsed.hostname) {
+      this.host = parsed.hostname;
+      this.port = parsed.port ? parseInt(parsed.port, 10) : 6379;
+      if (parsed.auth) {
+        var split = parsed.auth.split(':');
+        if (split[0])
+          options.database = split[0];
 
-    if (parsed.auth) {
-      var split = parsed.auth.split(':');
+        if (split[1])
+          options.auth_pass = split[1];
+      }
 
-      if (split[0])
-        options.database = split[0];
-
-      if (split[1])
-        options.password = split[1];
+      redisClient = redis.createClient(this.port, this.host, options);
+    } else {
+      this.socket = parsed.pathname;
+      redisClient = redis.createClient(parsed.pathname);
     }
+  } else {
+    if (options.returnBuffers)
+      options.return_buffers = true;
+
+    if (options.password)
+      options.auth_pass = options.password;
+
+    this.port = parseInt(options.port, 10) || 6379;
+    this.host = options.host || '127.0.0.1';
+
+    redisClient = redis.createClient(this.port, this.host, options);
   }
-
-  this.port = parseInt(options.port, 10) || 6379;
-  this.host = options.host || '127.0.0.1';
-
-  if (options.password)
-    options.auth_pass = options.password;
-
-  if (options.returnBuffers)
-    options.return_buffers = true;
-
-  var redisClient = redis.createClient(this.port, this.host, options);
 
   EVENTS.forEach(function (eventName) {
     redisClient.on(eventName, this.emit.bind(this, eventName));
