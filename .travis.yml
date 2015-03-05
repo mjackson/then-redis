@@ -2,4 +2,4 @@ language: node_js
 node_js:
   - "0.10"
 before_script: 
- - redis-server /tmp/redis.sock --unixsocketperm 755
+ - redis-server --unixsocket /tmp/redis.sock --unixsocketperm 755
