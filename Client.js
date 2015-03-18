@@ -176,6 +176,36 @@ Object.defineProperties(Client.prototype, {
   del: d(function (keys) {
     var args = Array.isArray(keys) ? keys : slice.call(arguments, 0);
     return this.send('del', args);
+  }),
+  //Optionally allow hscan to return a hash instead of an array, provided options are provided as an object
+  hscan: d(function(key,cursor,match,matchPattern,count,countInt){
+    if(typeof match == "object"){
+      args=[key,cursor];
+      for(var k in match){
+        args.push(k,match[k]);
+      }
+      return this.send("hscan",args).then(function(result){
+        return new Promise(function(resolve,reject){
+          hash={};
+          for(i=0;i<result[1].length;i+=2){
+            hash[result[1][i]]=result[1][i+1];
+          }
+          result[1]=hash;
+          resolve(result);
+        });
+      });
+    } else if(typeof match == "string"){
+      args=[key,cursor];
+        if(match){
+          args.push(match,matchPattern);
+        }
+        if(count){
+          args.push(count,countInt);
+        }
+        return this.send("hscan",args);
+    } else{
+      return this.send("hscan",[cursor]);
+    }
   })
 
 });

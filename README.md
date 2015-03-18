@@ -49,6 +49,12 @@ db.hmset('my-hash', originalHash);
 db.hgetall('my-hash').then(function (hash) {
   assert.deepEqual(hash, originalHash);
 });
+db.hscan('my-hash',0,"match","*","count",2).then(function(array){
+  assert.deepEqual(array[1],['a', 'one', 'b', 'two']);
+})
+db.hscan('my-hash',0,{count:2}).then(function(array){
+  assert.deepEqual(array[1],originalHash);
+})
 
 // Transactions
 db.multi();
