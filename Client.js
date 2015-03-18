@@ -78,7 +78,7 @@ function Client(options) {
     if (parsed.auth) {
       var split = parsed.auth.split(':');
 
-      if (split[0])
+      if (split[0] && !isNaN(split[0]))
         options.database = split[0];
 
       if (split[1])
