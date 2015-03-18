@@ -180,6 +180,24 @@ Object.defineProperties(Client.prototype, {
 
 });
 
+Client.prototype.exec = function (multiFn) {
+  if (multiFn) {
+    var multi = this._redisClient.multi();
+    multiFn(multi);
+    return new Promise(function (resolve, reject) {
+      multi.exec(function (error, result) {
+        if (error) {
+          reject(error);
+        } else {
+          resolve(result);
+        }
+      });
+    });
+  } else {
+    return this.send('exec');
+  }
+};
+
 // Optionally accept an array as the first argument to LPUSH and RPUSH after the key.
 [ 'lpush', 'rpush' ].forEach(function (command) {
   Object.defineProperty(Client.prototype, command, d(function (key, array) {
