@@ -78,6 +78,12 @@ db.send('mset', [ 'a', 'one', 'b', 'two' ]);
 
 \* `INFO`, `MGET`, `MSET`, `MSETNX`, `HMSET`, `HGETALL`, `LPUSH`, and `RPUSH` optionally accept/return JavaScript objects for convenience in dealing with Redis' multi-key and hash APIs
 
+### Forcibly closing the connection
+
+```js
+db.end()
+```
+
 ### Compatibility
 
 For best results, it is recommended that you use Redis 2.6 or above.
