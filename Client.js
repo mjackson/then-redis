@@ -4,7 +4,7 @@ var d = require('describe-property');
 var EventEmitter = require('events').EventEmitter;
 var appendHashToArray = require('./utils/appendHashToArray');
 var parseInfo = require('./utils/parseInfo');
-var Promise = Promise || require('bluebird');
+if (typeof Promise === 'undefined') var Promise = Promise || require('bluebird');
 
 var PROPERTIES = [
   // redis properties, forwarded read-only.
