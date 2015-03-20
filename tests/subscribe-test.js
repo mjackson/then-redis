@@ -1,6 +1,6 @@
 var expect = require('expect');
 var redis = require('../index');
-var Promise = require('../utils/Promise');
+if (typeof Promise === 'undefined') var Promise = Promise || require('bluebird');
 var db = require('./db');
 
 describe('subscribe', function () {

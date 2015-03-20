@@ -1,5 +1,5 @@
 var expect = require('expect');
-var Promise = require('../utils/Promise');
+if (typeof Promise === 'undefined') var Promise = Promise || require('bluebird');
 var db = require('./db');
 
 describe('sdiff', function () {
