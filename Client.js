@@ -123,6 +123,10 @@ Client.prototype.send = function (command, args) {
   });
 };
 
+Client.prototype.unref = function () {
+  this._redisClient.unref();
+};
+
 var slice = Array.prototype.slice;
 
 Object.defineProperties(Client.prototype, {
