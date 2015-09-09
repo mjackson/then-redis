@@ -88,6 +88,11 @@ Using [npm](https://www.npmjs.org/):
 
     $ npm install then-redis
 
+The [redis module](https://www.npmjs.com/package/redis) is a [peer dependency](https://blog.domenic.me/peer-dependencies/)
+of this module, so it will need to be installed if it hasn't been already:
+
+    $ npm install redis
+
 ### Issues
 
 Please file issues on the [issue tracker on GitHub](https://github.com/mjackson/then-redis/issues).

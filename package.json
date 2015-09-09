@@ -18,10 +18,10 @@
     "expect": "^1.1.0",
     "jshint": "^2.5.10",
     "mocha": "^2.0.1",
-    "redis": "^0.12.1"
+    "redis": "^1.0.0"
   },
   "peerDependencies": {
-    "redis": "^0.12.1"
+    "redis": ">= 0.12.1 < 2"
   },
   "keywords": [
     "redis",
