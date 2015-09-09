@@ -5,6 +5,7 @@ var EventEmitter = require('events').EventEmitter;
 var appendHashToArray = require('./utils/appendHashToArray');
 var parseInfo = require('./utils/parseInfo');
 var Promise = require('./utils/Promise');
+var net = require('net');
 
 var PROPERTIES = [
   // redis properties, forwarded read-only.
@@ -63,47 +64,30 @@ var EVENTS = [
  *     assert.equal(value, 'my value');
  *   });
  */
-function Client(options) {
+function Client(arg0, arg1, options) {
   EventEmitter.call(this);
 
-  options = options || process.env.REDIS_URL || 'tcp://127.0.0.1:6379';
-
-  if (typeof options === 'string') {
-    var parsed = url.parse(options);
-
-    options = {};
-    options.host = parsed.hostname;
-    options.port = parsed.port;
-
-    if (parsed.auth) {
-      var split = parsed.auth.split(':');
-
-      if (split[0] && !isNaN(split[0]))
-        options.database = split[0];
-
-      if (split[1])
-        options.password = split[1];
+  if(typeof arg0 === 'object' && !(arg0 instanceof net.Socket)) {
+    arg0.auth_pass = arg0.password || null;
+    arg0.return_buffers = arg0.return_buffers || false;
+    
+    if(arg0.hasOwnProperty('host')) {
+      options = arg0;
+      arg0 = options.port || 6379;
+      arg1 = options.host;
     }
   }
 
-  this.port = parseInt(options.port, 10) || 6379;
-  this.host = options.host || '127.0.0.1';
-
-  if (options.password)
-    options.auth_pass = options.password;
-
-  if (options.returnBuffers)
-    options.return_buffers = true;
-
-  var redisClient = redis.createClient(this.port, this.host, options);
+  
+  var redisClient = redis.createClient(arg0, arg1, options);
 
   EVENTS.forEach(function (eventName) {
     redisClient.on(eventName, this.emit.bind(this, eventName));
   }, this);
 
   this._redisClient = redisClient;
-
-  if (options.database)
+  
+  if (options && options.database)
     this.select(options.database);
 }
 
