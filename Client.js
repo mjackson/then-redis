@@ -66,9 +66,7 @@ var EVENTS = [
 function Client(options) {
   EventEmitter.call(this);
 
-  
   redis = options.redisClient || require('redis');
-
 
   options = options || process.env.REDIS_URL || 'tcp://127.0.0.1:6379';
 
