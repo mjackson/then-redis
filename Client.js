@@ -49,6 +49,7 @@ var EVENTS = [
  * - database         The database # to use (defaults to 0)
  * - password         The password to use for AUTH
  * - returnBuffers    True to return buffers (defaults to false)
+ * - redisClient      To override the default redis client e.g. fakeredis
  *
  * Example:
  *
