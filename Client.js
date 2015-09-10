@@ -1,5 +1,5 @@
 var url = require('url');
-var redis = require('redis');
+var redis;
 var d = require('describe-property');
 var EventEmitter = require('events').EventEmitter;
 var appendHashToArray = require('./utils/appendHashToArray');
@@ -65,6 +65,10 @@ var EVENTS = [
  */
 function Client(options) {
   EventEmitter.call(this);
+
+  
+  redis = options.redisClient || require('redis');
+
 
   options = options || process.env.REDIS_URL || 'tcp://127.0.0.1:6379';
 
