@@ -1,5 +1,5 @@
 var url = require('url');
-var redis = require('redis');
+var redis;
 var d = require('describe-property');
 var EventEmitter = require('events').EventEmitter;
 var appendHashToArray = require('./utils/appendHashToArray');
@@ -49,6 +49,7 @@ var EVENTS = [
  * - database         The database # to use (defaults to 0)
  * - password         The password to use for AUTH
  * - returnBuffers    True to return buffers (defaults to false)
+ * - redisClient      To override the default redis client e.g. fakeredis
  *
  * Example:
  *
@@ -65,6 +66,8 @@ var EVENTS = [
  */
 function Client(options) {
   EventEmitter.call(this);
+
+  redis = (options && options.redisClient) || require('redis');
 
   options = options || process.env.REDIS_URL || 'tcp://127.0.0.1:6379';
 
