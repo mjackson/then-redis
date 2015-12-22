@@ -1,9 +1,9 @@
-[![npm package](https://img.shields.io/npm/v/then-redis.svg?style=flat-square)](https://www.npmjs.org/package/then-redis)
+[![npm package](https://img.shields.io/npm/v/then-redis.svg?style=flat-square)](https://www.npmjs.com/package/then-redis)
 [![build status](https://img.shields.io/travis/mjackson/then-redis.svg?style=flat-square)](https://travis-ci.org/mjackson/then-redis)
 [![dependency status](https://img.shields.io/david/mjackson/then-redis.svg?style=flat-square)](https://david-dm.org/mjackson/then-redis)
 [![code climate](https://img.shields.io/codeclimate/github/mjackson/then-redis.svg?style=flat-square)](https://codeclimate.com/github/mjackson/then-redis)
 
-[then-redis](https://github.com/mjijackson/then-redis) is a fast, promise-based [Redis](http://redis.io) client for [node.js](http://nodejs.org). It's build on top of [node_redis](https://github.com/mranney/node_redis), so it's safe and stable.
+[then-redis](https://github.com/mjackson/then-redis) is a fast, promise-based [Redis](http://redis.io) client for [node.js](http://nodejs.org). It's build on top of [node_redis](https://github.com/NodeRedis/node_redis), so it's safe and stable.
 
 ### Usage
 
