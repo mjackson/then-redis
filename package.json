@@ -4,7 +4,10 @@
   "description": "Promise-based Redis client",
   "author": "Michael Jackson",
   "license": "MIT",
-  "main": "index.js",
+  "main": "lib",
+  "files": [
+    "lib"
+  ],
   "scripts": {
     "lint": "eslint modules",
     "build": "rimraf lib && babel ./modules -d lib --ignore '__tests__'",
