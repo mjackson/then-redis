@@ -1,38 +1,38 @@
-var assert = require('assert');
-var redis = require('../index');
-var db = require('./db');
+let assert = require('assert')
+let redis = require('../index')
+let db = require('./db')
 
-describe('when a server requires auth', function () {
-  var password = 'secret';
-  beforeEach(function () {
-    return db.config('set', 'requirepass', password).then(function () {
-      return db.auth(password);
-    });
-  });
+describe('when a server requires auth', () => {
+  let password = 'secret'
+  beforeEach(() => {
+    return db.config('set', 'requirepass', password).then(() => {
+      return db.auth(password)
+    })
+  })
 
-  afterEach(function () {
-    return db.config('set', 'requirepass', '');
-  });
+  afterEach(() => {
+    return db.config('set', 'requirepass', '')
+  })
 
-  describe('a new client with the correct password', function () {
-    var client;
-    beforeEach(function () {
-      client = redis.createClient({ host: db.host, port: db.port, password: password });
-    });
+  describe('a new client with the correct password', () => {
+    let client
+    beforeEach(() => {
+      client = redis.createClient({ host: db.host, port: db.port, password: password })
+    })
 
-    it('does not throw when commands are issued', function () {
-      return client.get('a-key');
-    });
-  });
+    it('does not throw when commands are issued', () => {
+      return client.get('a-key')
+    })
+  })
 
-  describe('a new client with the wrong password', function () {
-    it('throws when commands are issued', function (done) {
-      var client = redis.createClient({ host: db.host, port: db.port });
+  describe('a new client with the wrong password', () => {
+    it('throws when commands are issued', (done) => {
+      let client = redis.createClient({ host: db.host, port: db.port })
 
-      client.on('error', function (error) {
-        assert(error);
-        done();
-      });
-    });
-  });
-});
+      client.on('error', (error) => {
+        assert(error)
+        done()
+      })
+    })
+  })
+})

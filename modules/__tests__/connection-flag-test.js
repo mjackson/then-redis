@@ -1,16 +1,16 @@
-var expect = require('expect');
-var redis = require('../index');
+let expect = require('expect')
+let redis = require('../index')
 
-describe('connection-flag', function () {
-  var client;
-  beforeEach(function () {
-    client = redis.createClient();
-  });
+describe('connection-flag', () => {
+  let client
+  beforeEach(() => {
+    client = redis.createClient()
+  })
 
-  it('is set on connect', function (done) {
-    client.on('connect', function () {
-      expect(client.connected).toEqual(true);
-      done();
-    });
-  });
-});
+  it('is set on connect', (done) => {
+    client.on('connect', () => {
+      expect(client.connected).toEqual(true)
+      done()
+    })
+  })
+})

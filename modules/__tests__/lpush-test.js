@@ -1,20 +1,20 @@
-var expect = require('expect');
-var db = require('./db');
+let expect = require('expect')
+let db = require('./db')
 
-describe('lpush', function () {
-  it('accepts a list of values as arguments', function () {
-    db.lpush('my-key', 'c', 'b', 'a');
+describe('lpush', () => {
+  it('accepts a list of values as arguments', () => {
+    db.lpush('my-key', 'c', 'b', 'a')
 
-    return db.lrange('my-key', 0, -1).then(function (list) {
-      expect(list).toEqual([ 'a', 'b', 'c' ]);
-    });
-  });
+    return db.lrange('my-key', 0, -1).then((list) => {
+      expect(list).toEqual([ 'a', 'b', 'c' ])
+    })
+  })
 
-  it('accepts an array as the second argument', function () {
-    db.lpush('my-key', [ 'c', 'b', 'a' ]);
+  it('accepts an array as the second argument', () => {
+    db.lpush('my-key', [ 'c', 'b', 'a' ])
 
-    return db.lrange('my-key', 0, -1).then(function (list) {
-      expect(list).toEqual([ 'a', 'b', 'c' ]);
-    });
-  });
-});
+    return db.lrange('my-key', 0, -1).then((list) => {
+      expect(list).toEqual([ 'a', 'b', 'c' ])
+    })
+  })
+})

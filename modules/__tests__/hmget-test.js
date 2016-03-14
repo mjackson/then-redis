@@ -1,12 +1,12 @@
-var expect = require('expect');
-var db = require('./db');
+let expect = require('expect')
+let db = require('./db')
 
-describe('hmget', function () {
-  it('returns an array of values for the given keys', function () {
-    db.hmset('my-key', 'a', 'one', 'b', 'two', 'c', 'three');
+describe('hmget', () => {
+  it('returns an array of values for the given keys', () => {
+    db.hmset('my-key', 'a', 'one', 'b', 'two', 'c', 'three')
 
-    return db.hmget('my-key', 'a', 'b').then(function (array) {
-      expect(array).toEqual([ 'one', 'two' ]);
-    });
-  });
-});
+    return db.hmget('my-key', 'a', 'b').then((array) => {
+      expect(array).toEqual([ 'one', 'two' ])
+    })
+  })
+})

@@ -1,34 +1,34 @@
-var crypto = require('crypto');
-var expect = require('expect');
-var db = require('./db');
+let crypto = require('crypto')
+let expect = require('expect')
+let db = require('./db')
 
-describe('keys', function () {
-  describe('when there are no keys', function () {
-    it('returns an empty array', function () {
-      return db.keys('*').then(function (keys) {
-        expect(keys).toEqual([]);
-      });
-    });
-  });
+describe('keys', () => {
+  describe('when there are no keys', () => {
+    it('returns an empty array', () => {
+      return db.keys('*').then((keys) => {
+        expect(keys).toEqual([])
+      })
+    })
+  })
 
-  describe('when there are many long keys', function () {
-    var hash;
-    beforeEach(function () {
-      hash = {};
+  describe('when there are many long keys', () => {
+    let hash
+    beforeEach(() => {
+      hash = {}
 
-      var key;
-      for (var i = 0; i < 200; ++i) {
-        key = crypto.randomBytes(256).toString('hex');
-        hash[key] = 'value ' + i;
+      let key
+      for (let i = 0; i < 200; ++i) {
+        key = crypto.randomBytes(256).toString('hex')
+        hash[key] = 'value ' + i
       }
 
-      return db.mset(hash);
-    });
+      return db.mset(hash)
+    })
 
-    it('returns an array of all keys', function () {
-      return db.keys('*').then(function (keys) {
-        expect(keys.sort()).toEqual(Object.keys(hash).sort());
-      });
-    });
-  });
-});
+    it('returns an array of all keys', () => {
+      return db.keys('*').then((keys) => {
+        expect(keys.sort()).toEqual(Object.keys(hash).sort())
+      })
+    })
+  })
+})

@@ -1,0 +1,17 @@
+{
+  "extends": "airbnb",
+  "parser": "babel-eslint",
+  "rules": {
+    "array-bracket-spacing": [2, "always"],
+    "comma-dangle": 0,
+    "consistent-return": 1,
+    "curly": [1, "multi-or-nest", "consistent"],
+    "eqeqeq": [2, "smart"],
+    "max-len": 1,
+    "no-param-reassign": [2, { "props": false }],
+    "no-return-assign": 0,
+    "no-shadow": 1,
+    "prefer-template": 0,
+    "semi": [2, "never"]
+  }
+}

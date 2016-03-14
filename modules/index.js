@@ -1,5 +1,4 @@
-exports.Client = require('./Client');
+exports.Client = require('./Client')
 
-exports.createClient = function (options) {
-  return new exports.Client(options);
-};
+exports.createClient = (options) =>
+  new exports.Client(options)

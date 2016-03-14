@@ -1,13 +1,13 @@
-var expect = require('expect');
-var redis = require('../index');
+import expect from 'expect'
+import redis from '../index'
 
 // Note: Use this instance in all tests.
-var db = redis.createClient();
+const db = redis.createClient()
 
-beforeEach(function () {
-  return db.flushdb().then(function (reply) {
-    expect(reply).toEqual('OK');
-  });
-});
+beforeEach(() =>
+  db.flushdb().then((reply) => {
+    expect(reply).toEqual('OK')
+  })
+)
 
-module.exports = db;
+module.exports = db

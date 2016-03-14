@@ -1,55 +1,55 @@
-var expect = require('expect');
-var redis = require('../index');
-var db = require('./db');
+let expect = require('expect')
+let redis = require('../index')
+let db = require('./db')
 
-describe('monitor', function () {
-  var monitor;
-  beforeEach(function () {
-    monitor = redis.createClient();
-  });
+describe('monitor', () => {
+  let monitor
+  beforeEach(() => {
+    monitor = redis.createClient()
+  })
 
-  describe('when monitoring the database', function () {
-    var monitorMessages, commands;
-    beforeEach(function () {
-      monitorMessages = [];
+  describe('when monitoring the database', () => {
+    let monitorMessages, commands
+    beforeEach(() => {
+      monitorMessages = []
       commands = [
         [ 'set', 'a', '5' ],
         [ 'incrby', 'a', '6' ],
         [ 'get', 'a' ]
-      ];
+      ]
 
-      monitor.on('monitor', function (time, args) {
-        monitorMessages.push(args);
-      });
+      monitor.on('monitor', (time, args) => {
+        monitorMessages.push(args)
+      })
 
-      return monitor.monitor().then(function (reply) {
-        expect(reply).toEqual('OK');
+      return monitor.monitor().then((reply) => {
+        expect(reply).toEqual('OK')
 
         // Send all commands in order.
-        var result = Promise.resolve();
+        let result = Promise.resolve()
 
-        commands.forEach(function (command) {
-          result = result.then(function () {
-            return db.send(command[0], command.slice(1));
-          });
-        });
+        commands.forEach((command) => {
+          result = result.then(() => {
+            return db.send(command[0], command.slice(1))
+          })
+        })
 
-        return result.then(waitForDelivery);
-      });
-    });
+        return result.then(waitForDelivery)
+      })
+    })
 
-    it('receives a message for all commands in the order they are sent', function () {
-      expect(monitorMessages.length).toEqual(commands.length);
+    it('receives a message for all commands in the order they are sent', () => {
+      expect(monitorMessages.length).toEqual(commands.length)
 
-      monitorMessages.forEach(function (args, index) {
-        expect(args).toEqual(commands[index]);
-      });
-    });
-  });
-});
+      monitorMessages.forEach((args, index) => {
+        expect(args).toEqual(commands[index])
+      })
+    })
+  })
+})
 
-function waitForDelivery() {
-  return new Promise(function (resolve, reject) {
-    setTimeout(resolve, 10);
-  });
+const waitForDelivery = () => {
+  return new Promise((resolve, reject) => {
+    setTimeout(resolve, 10)
+  })
 }
