@@ -21,7 +21,7 @@ if (process.cwd() !== resolvePath(__dirname, '..')) {
 const nextVersion = prompt(`Next version (current version is ${getPackageVersion()})? `)
 const isPrerelease = nextVersion.substring(0, 3) === 'pre'
 
-exect('npm test')
+exec('npm test')
 
 // 1) Increment the package version in package.json
 // 2) Create a new commit
