@@ -1,13 +1,13 @@
-let expect = require('expect')
-let db = require('./db')
+import expect from 'expect'
+import db from './db'
 
 describe('get', () => {
   describe('when a key does not exist', () => {
-    it('returns null', () => {
-      return db.get('does-not-exist').then((reply) => {
+    it('returns null', () =>
+      db.get('does-not-exist').then((reply) => {
         expect(reply).toBe(null)
       })
-    })
+    )
   })
 
   describe('when a key exists', () => {
@@ -18,10 +18,10 @@ describe('get', () => {
       return db.set(key, expectedReply)
     })
 
-    it('returns its value', () => {
-      return db.get(key).then((reply) => {
+    it('returns its value', () =>
+      db.get(key).then((reply) => {
         expect(reply).toBe(expectedReply)
       })
-    })
+    )
   })
 })

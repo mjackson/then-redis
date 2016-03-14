@@ -1,5 +1,5 @@
-let expect = require('expect')
-let redis = require('../index')
+import expect from 'expect'
+import redis from '../index'
 
 describe('connection-flag', () => {
   let client

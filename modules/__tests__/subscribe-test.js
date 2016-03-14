@@ -1,6 +1,11 @@
-let expect = require('expect')
-let redis = require('../index')
-let db = require('./db')
+import expect from 'expect'
+import redis from '../index'
+import db from './db'
+
+const waitForDelivery = () =>
+  new Promise(resolve => {
+    setTimeout(resolve, 10)
+  })
 
 describe('subscribe', () => {
   let subscriber
@@ -10,15 +15,13 @@ describe('subscribe', () => {
 
   // Sends the given messages in order to the given channel.
   const sendMessages = (channel, messages) => {
-    messages = messages.slice(0)
+    const messagesCopy = messages.slice(0)
+    const initialResult = db.publish(channel, messagesCopy.shift())
 
-    let result = db.publish(channel, messages.shift())
-
-    return messages.reduce((result, message) => {
-      return result.then(() => {
-        return db.publish(channel, message)
-      })
-    }, result)
+    return messagesCopy.reduce(
+      (result, message) => result.then(() => db.publish(channel, message)),
+      initialResult
+    )
   }
 
   describe('when subscribing to a channel', () => {
@@ -31,9 +34,9 @@ describe('subscribe', () => {
         receivedMessages.push(message)
       })
 
-      return subscriber.subscribe('a').then(() => {
-        return sendMessages('a', sentMessages).then(waitForDelivery)
-      })
+      return subscriber.subscribe('a').then(
+        () => sendMessages('a', sentMessages).then(waitForDelivery)
+      )
     })
 
     it('streams messages that are sent to that channel', () => {
@@ -62,12 +65,12 @@ describe('subscribe', () => {
       return Promise.all([
         subscriber.subscribe('a'),
         subscriber.subscribe('b')
-      ]).then(() => {
-        return Promise.all([
+      ]).then(
+        () => Promise.all([
           sendMessages('a', aSentMessages),
           sendMessages('b', bSentMessages)
         ]).then(waitForDelivery)
-      })
+      )
     })
 
     it('streams messages that are sent to any of those channels', () => {
@@ -76,9 +79,3 @@ describe('subscribe', () => {
     })
   })
 })
-
-const waitForDelivery = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, 10)
-  })
-}

@@ -11,6 +11,8 @@
     "no-param-reassign": [2, { "props": false }],
     "no-return-assign": 0,
     "no-shadow": 1,
+    "one-var": 0,
+    "one-var-declaration-per-line": 0,
     "prefer-template": 0,
     "semi": [2, "never"]
   }

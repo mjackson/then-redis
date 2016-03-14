@@ -1,6 +1,5 @@
-let expect = require('expect')
-let redis = require('../index')
-let db = require('./db')
+import expect from 'expect'
+import redis from '../index'
 
 describe('when subscribed to many channels', () => {
   let channels, subscriber
@@ -15,7 +14,7 @@ describe('when subscribed to many channels', () => {
     beforeEach((done) => {
       unsubscribedChannel = null
 
-      subscriber.on('unsubscribe', (channel, numSubscriptions) => {
+      subscriber.on('unsubscribe', (channel) => {
         unsubscribedChannel = channel
         done()
       })
@@ -33,7 +32,7 @@ describe('when subscribed to many channels', () => {
     beforeEach((done) => {
       unsubscribedChannels = []
 
-      subscriber.on('unsubscribe', (channel, numSubscriptions) => {
+      subscriber.on('unsubscribe', (channel) => {
         unsubscribedChannels.push(channel)
 
         if (unsubscribedChannels.length === channels.length)
@@ -60,10 +59,10 @@ describe('when subscribed to no channels', () => {
   })
 
   describe('unsubscribing from all channels', () => {
-    it('returns null', () => {
-      return subscriber.unsubscribe().then((reply) => {
+    it('returns null', () =>
+      subscriber.unsubscribe().then((reply) => {
         expect(reply).toEqual(null)
       })
-    })
+    )
   })
 })

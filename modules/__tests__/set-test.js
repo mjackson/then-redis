@@ -1,5 +1,5 @@
-let expect = require('expect')
-let db = require('./db')
+import expect from 'expect'
+import db from './db'
 
 describe('set', () => {
   let key, expectedReply
@@ -9,9 +9,9 @@ describe('set', () => {
     return db.set(key, expectedReply)
   })
 
-  it('sets the value of a key', () => {
-    return db.get(key).then((reply) => {
+  it('sets the value of a key', () =>
+    db.get(key).then((reply) => {
       expect(reply).toBe(expectedReply)
     })
-  })
+  )
 })

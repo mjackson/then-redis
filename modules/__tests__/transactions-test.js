@@ -1,6 +1,6 @@
-let assert = require('assert')
-let expect = require('expect')
-let db = require('./db')
+import assert from 'assert'
+import expect from 'expect'
+import db from './db'
 
 describe('transactions', () => {
   describe('when there is no error inside a transaction', () => {
@@ -29,6 +29,7 @@ describe('transactions', () => {
   describe('when there is an error enqueueing the transaction', () => {
     it('throws the error', () => {
       db.multi()
+
       return db.send('unknown-command').then(() => {
         assert(false, 'successfully queued non-existent command')
       }, (error) => {

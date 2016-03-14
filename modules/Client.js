@@ -1,5 +1,5 @@
-import url from 'url'
 import { EventEmitter } from 'events'
+import { parse as parseURL } from 'url'
 import d from 'describe-property'
 import RedisCommands from 'redis-commands'
 import redis from 'redis'
@@ -48,6 +48,14 @@ const AllEvents = [
   ...PubSubEvents
 ]
 
+const DefaultPort = 6379
+const DefaultHost = '127.0.0.1'
+
+const DefaultConfig = {
+  port: DefaultPort,
+  host: DefaultHost
+}
+
 /**
  * A small Redis client that returns promises for all operations.
  *
@@ -62,17 +70,18 @@ const AllEvents = [
 function Client(options) {
   EventEmitter.call(this)
 
-  options = options || process.env.REDIS_URL || 'tcp://127.0.0.1:6379'
+  let config = options || process.env.REDIS_URL || DefaultConfig
 
-  if (typeof options === 'string') {
-    let parsed = url.parse(options)
+  if (typeof config === 'string') {
+    const url = parseURL(config)
 
-    options = {}
-    options.host = parsed.hostname
-    options.port = parsed.port
+    config = {
+      port: url.port,
+      host: url.hostname
+    }
 
-    if (parsed.auth) {
-      let split = parsed.auth.split(':')
+    if (url.auth) {
+      const split = url.auth.split(':')
 
       if (split[0] && !isNaN(split[0]))
         options.database = split[0]
@@ -82,16 +91,16 @@ function Client(options) {
     }
   }
 
-  this.port = parseInt(options.port, 10) || 6379
-  this.host = options.host || '127.0.0.1'
+  this.port = parseInt(config.port, 10) || 6379
+  this.host = config.host || '127.0.0.1'
 
-  if (options.password)
-    options.auth_pass = options.password
+  if (config.password)
+    config.auth_pass = config.password
 
-  if (options.returnBuffers)
-    options.return_buffers = true
+  if (config.returnBuffers)
+    config.return_buffers = true
 
-  const redisClient = redis.createClient(this.port, this.host, options)
+  const redisClient = redis.createClient(this.port, this.host, config)
 
   AllEvents.forEach((eventName) => {
     redisClient.on(eventName, this.emit.bind(this, eventName))
@@ -99,8 +108,8 @@ function Client(options) {
 
   this._redisClient = redisClient
 
-  if (options.database)
-    this.select(options.database)
+  if (config.database)
+    this.select(config.database)
 }
 
 require('util').inherits(Client, EventEmitter)
@@ -154,7 +163,7 @@ Object.defineProperties(Client.prototype, {
 
   // Update the selected_db property of the client on SELECT.
   select: d(function (db) {
-    let client = this._redisClient
+    const client = this._redisClient
 
     return new Promise((resolve, reject) => {
       // Need to use this so selected_db updates properly.
@@ -179,7 +188,7 @@ Object.defineProperties(Client.prototype, {
 // Optionally accept an array as the first argument to LPUSH and RPUSH after the key.
 [ 'lpush', 'rpush' ].forEach((command) => {
   Object.defineProperty(Client.prototype, command, d(function (key, array) {
-    let args = Array.isArray(array) ? [ key ].concat(array) : slice.call(arguments, 0)
+    const args = Array.isArray(array) ? [ key ].concat(array) : slice.call(arguments, 0)
     return this.send(command, args)
   }))
 })
@@ -192,12 +201,12 @@ ClientProperties.forEach((propertyName) => {
 
 RedisCommands.list.forEach((command) => {
   // Some commands have spaces in them, like CONFIG SET.
-  command = command.split(' ')[0]
+  const methodName = command.split(' ')[0]
 
-  if (command in Client.prototype)
+  if (methodName in Client.prototype)
     return
 
-  Object.defineProperty(Client.prototype, command, d(function (...args) {
+  Object.defineProperty(Client.prototype, methodName, d(function (...args) {
     return this.send(command, args)
   }))
 })

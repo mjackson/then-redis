@@ -1,13 +1,13 @@
-let assert = require('assert')
-let expect = require('expect')
-let db = require('./db')
+import assert from 'assert'
+import expect from 'expect'
+import db from './db'
 
 describe('info', () => {
-  it('returns an object of info', () => {
-    return db.info().then((info) => {
+  it('returns an object of info', () =>
+    db.info().then((info) => {
       assert(info)
       expect(typeof info).toEqual('object')
       assert(info.redis_version)
     })
-  })
+  )
 })

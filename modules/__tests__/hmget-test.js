@@ -1,5 +1,5 @@
-let expect = require('expect')
-let db = require('./db')
+import expect from 'expect'
+import db from './db'
 
 describe('hmget', () => {
   it('returns an array of values for the given keys', () => {

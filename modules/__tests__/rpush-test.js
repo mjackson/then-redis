@@ -1,5 +1,5 @@
-let expect = require('expect')
-let db = require('./db')
+import expect from 'expect'
+import db from './db'
 
 describe('rpush', () => {
   it('accepts a list of values as arguments', () => {

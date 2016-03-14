@@ -1,6 +1,11 @@
-let expect = require('expect')
-let redis = require('../index')
-let db = require('./db')
+import expect from 'expect'
+import redis from '../index'
+import db from './db'
+
+const waitForDelivery = () =>
+  new Promise(resolve => {
+    setTimeout(resolve, 10)
+  })
 
 describe('monitor', () => {
   let monitor
@@ -29,9 +34,9 @@ describe('monitor', () => {
         let result = Promise.resolve()
 
         commands.forEach((command) => {
-          result = result.then(() => {
-            return db.send(command[0], command.slice(1))
-          })
+          result = result.then(() =>
+            db.send(command[0], command.slice(1))
+          )
         })
 
         return result.then(waitForDelivery)
@@ -47,9 +52,3 @@ describe('monitor', () => {
     })
   })
 })
-
-const waitForDelivery = () => {
-  return new Promise((resolve, reject) => {
-    setTimeout(resolve, 10)
-  })
-}
