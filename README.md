@@ -6,11 +6,11 @@
 [npm-badge]: https://img.shields.io/npm/v/then-redis.svg?style=flat-square
 [npm]: https://www.npmjs.org/package/then-redis
 
-[then-redis](https://github.com/mjijackson/then-redis) is a fast, promise-based [Redis](http://redis.io) client for [node.js](http://nodejs.org). It's build on top of [node_redis](https://github.com/mranney/node_redis), so it's safe and stable.
+[then-redis](https://github.com/mjackson/then-redis) is a fast, promise-based [Redis](http://redis.io) client for [node.js](http://nodejs.org). It's build on top of [node_redis](https://github.com/NodeRedis/node_redis), so it's safe and stable.
 
 ## Installation
 
-Using [npm](https://www.npmjs.org/):
+Using [npm](https://www.npmjs.com/):
 
     $ npm install --save redis redis-commands then-redis
 
