@@ -15,9 +15,6 @@
     "type": "git",
     "url": "https://github.com/mjackson/then-redis.git"
   },
-  "dependencies": {
-    "describe-property": "^1.0.0"
-  },
   "devDependencies": {
     "babel-cli": "^6.6.5",
     "babel-eslint": "^5.0.0",
