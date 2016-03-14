@@ -112,6 +112,10 @@ class Client extends EventEmitter {
       this.select(config.database)
   }
 
+  unref() {
+    this._redisClient.unref()
+  }
+
   send(command, args = []) {
     return new Promise((resolve, reject) => {
       this._redisClient.send_command(command, args, (error, value) => {
