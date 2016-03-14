@@ -23,9 +23,7 @@ const ConnectionEvents = [
   'connect',
   'reconnecting',
   'error',
-  'end',
-  'drain',
-  'idle'
+  'end'
 ]
 
 const MonitorEvents = [
