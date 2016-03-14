@@ -1,3 +1,11 @@
+function appendHashToArray(hash, array) {
+  for (var field in hash)
+    if (hash.hasOwnProperty(field))
+      array.push(field, hash[field]);
+
+  return array;
+}
+
 function parseInfo(info) {
   var hash = {};
 
@@ -13,4 +21,7 @@ function parseInfo(info) {
   return hash;
 }
 
-module.exports = parseInfo;
+module.exports = {
+  appendHashToArray,
+  parseInfo
+};

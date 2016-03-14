@@ -21,7 +21,7 @@ describe('transactions', function () {
       db.incr('a');
       return db.exec().then(function (reply) {
         expect(reply.length).toEqual(2);
-        expect(reply[1]).toEqual('ERR value is not an integer or out of range');
+        expect(reply[1].message).toMatch(/ERR value is not an integer or out of range/);
       });
     });
   });

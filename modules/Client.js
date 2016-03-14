@@ -2,9 +2,8 @@ var url = require('url');
 var redis = require('redis');
 var d = require('describe-property');
 var EventEmitter = require('events').EventEmitter;
-var appendHashToArray = require('./utils/appendHashToArray');
-var parseInfo = require('./utils/parseInfo');
-var Promise = require('./utils/Promise');
+var appendHashToArray = require('./RedisUtils').appendHashToArray;
+var parseInfo = require('./RedisUtils').parseInfo;
 
 var PROPERTIES = [
   // redis properties, forwarded read-only.
@@ -194,7 +193,9 @@ PROPERTIES.forEach(function (propertyName) {
   }));
 });
 
-require('redis/lib/commands').forEach(function (command) {
+const RedisCommands = require('redis-commands')
+
+RedisCommands.list.forEach(function (command) {
   // Some commands have spaces in them, like CONFIG SET.
   command = command.split(' ')[0];
 

@@ -1,6 +1,5 @@
 var expect = require('expect');
 var redis = require('../index');
-var Promise = require('../utils/Promise');
 var db = require('./db');
 
 describe('monitor', function () {
@@ -14,8 +13,8 @@ describe('monitor', function () {
     beforeEach(function () {
       monitorMessages = [];
       commands = [
-        [ 'set', 'a', 5 ],
-        [ 'incrby', 'a', 6 ],
+        [ 'set', 'a', '5' ],
+        [ 'incrby', 'a', '6' ],
         [ 'get', 'a' ]
       ];
 

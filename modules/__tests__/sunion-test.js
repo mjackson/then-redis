@@ -1,5 +1,4 @@
 var expect = require('expect');
-var Promise = require('../utils/Promise');
 var db = require('./db');
 
 describe('sunion', function () {
@@ -13,7 +12,7 @@ describe('sunion', function () {
 
   it('returns the members of the set resulting from the union of all given sets', function () {
     return db.sunion('set-one', 'set-two', 'set-three').then(function (union) {
-      expect(union.sort()).toEqual([1, 2, 3, 4, 5, 6, 7, 8]);
+      expect(union.sort()).toEqual([ '1', '2', '3', '4', '5', '6', '7', '8' ]);
     });
   });
 });

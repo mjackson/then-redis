@@ -6,23 +6,22 @@
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "mocha --reporter spec 'tests/*-test.js'"
+    "test": "mocha --reporter spec 'modules/**/*-test.js'"
   },
   "repository": {
     "type": "git",
-    "url": "git://github.com/mjackson/then-redis.git"
+    "url": "https://github.com/mjackson/then-redis.git"
   },
   "dependencies": {
-    "bluebird": "^2.3.11",
     "describe-property": "^1.0.0"
   },
   "devDependencies": {
     "expect": "^1.1.0",
-    "mocha": "^2.0.1",
-    "redis": "^0.12.1"
+    "mocha": "^2.0.1"
   },
   "peerDependencies": {
-    "redis": "^0.12.1"
+    "redis": "^2.4.2",
+    "redis-commands": "^1.1.0"
   },
   "keywords": [
     "redis",

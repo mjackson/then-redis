@@ -1,6 +1,5 @@
 var expect = require('expect');
 var redis = require('../index');
-var Promise = require('../utils/Promise');
 var db = require('./db');
 
 describe('subscribe', function () {
