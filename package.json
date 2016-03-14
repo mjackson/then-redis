@@ -11,8 +11,9 @@
   "scripts": {
     "lint": "eslint modules",
     "build": "rimraf lib && babel ./modules -d lib --ignore '__tests__'",
-    "test": "mocha --compilers js:babel-register --reporter spec 'modules/**/*-test.js'",
-    "prepublish": "npm run build"
+    "test": "npm run lint && mocha --compilers js:babel-register --reporter spec 'modules/**/*-test.js'",
+    "prepublish": "npm run build",
+    "release": "node ./scripts/release.js"
   },
   "repository": {
     "type": "git",
@@ -28,6 +29,7 @@
     "eslint-plugin-react": "^4.2.1",
     "expect": "^1.1.0",
     "mocha": "^2.0.1",
+    "readline-sync": "^1.4.1",
     "rimraf": "^2.5.2"
   },
   "peerDependencies": {
