@@ -1,5 +1,4 @@
 import { EventEmitter } from 'events'
-import { parse as parseURL } from 'url'
 import RedisCommands from 'redis-commands'
 import redis from 'redis'
 import {
@@ -45,71 +44,24 @@ const AllEvents = [
   ...PubSubEvents
 ]
 
-const DefaultPort = 6379
-const DefaultHost = '127.0.0.1'
-
-const DefaultConfig = {
-  port: DefaultPort,
-  host: DefaultHost
-}
-
 /**
  * A Redis client that returns promises for all operations.
  */
 class Client extends EventEmitter {
 
   /**
-   * Supported options are:
-   *
-   * - port             The TCP port to use (defaults to 6379)
-   * - host             The hostname of the Redis host (defaults to 127.0.0.1)
-   * - database         The database # to use (defaults to 0)
-   * - password         The password to use for AUTH
-   * - returnBuffers    True to return buffers (defaults to false)
+   * Supports exactly the same parameters as node_redis
    */
-  constructor(options) {
+  constructor(...args) {
     super()
 
-    let config = options || process.env.REDIS_URL || DefaultConfig
-
-    if (typeof config === 'string') {
-      const url = parseURL(config)
-
-      config = {
-        port: url.port,
-        host: url.hostname
-      }
-
-      if (url.auth) {
-        const split = url.auth.split(':')
-
-        if (split[0] && !isNaN(split[0]))
-          options.database = split[0]
-
-        if (split[1])
-          options.password = split[1]
-      }
-    }
-
-    this.port = parseInt(config.port, 10) || 6379
-    this.host = config.host || '127.0.0.1'
-
-    if (config.password)
-      config.auth_pass = config.password
-
-    if (config.returnBuffers)
-      config.return_buffers = true
-
-    const redisClient = redis.createClient(this.port, this.host, config)
+    const redisClient = redis.createClient(...args)
 
     AllEvents.forEach((eventName) => {
       redisClient.on(eventName, this.emit.bind(this, eventName))
     }, this)
 
     this._redisClient = redisClient
-
-    if (config.database)
-      this.select(config.database)
   }
 
   unref() {
