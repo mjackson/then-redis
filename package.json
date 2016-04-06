@@ -32,7 +32,7 @@
     "readline-sync": "^1.4.1",
     "rimraf": "^2.5.2"
   },
-  "peerDependencies": {
+  "dependencies": {
     "redis": "^2.4.2",
     "redis-commands": "^1.1.0"
   },
