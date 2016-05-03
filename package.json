@@ -15,9 +15,9 @@
     "prepublish": "npm run build",
     "release": "node ./scripts/release.js"
   },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/mjackson/then-redis.git"
+  "peerDependencies": {
+    "redis": "*",
+    "redis-commands": "*"
   },
   "devDependencies": {
     "babel-cli": "^6.6.5",
@@ -32,14 +32,19 @@
     "readline-sync": "^1.4.1",
     "rimraf": "^2.5.2"
   },
-  "peerDependencies": {
-    "redis": "*",
-    "redis-commands": "*"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/mjackson/then-redis.git"
   },
   "keywords": [
     "redis",
     "then",
     "promise",
     "promises"
-  ]
+  ],
+  "babel": {
+    "presets": [
+      "es2015"
+    ]
+  }
 }
