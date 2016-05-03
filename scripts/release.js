@@ -28,9 +28,10 @@ exec('npm test')
 // 3) Create a v* tag that points to that commit
 exec(`npm version ${nextVersion} -m "Version %s"`)
 
-// 4) Push to GitHub master. Do this before we publish in
-// case anyone has pushed to GitHub since we last pulled
-exec('git push origin master')
+// 4) Push to the same branch on the git remote (GitHub).
+// Do this before we publish in case anyone has pushed
+// since we last pulled
+exec('git push origin')
 
 // 5) Publish to npm. Use the "next" tag for pre-releases,
 // "latest" for all others
