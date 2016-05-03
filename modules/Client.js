@@ -84,10 +84,10 @@ class Client extends EventEmitter {
         const split = url.auth.split(':')
 
         if (split[0] && !isNaN(split[0]))
-          options.database = split[0]
+          config.database = split[0]
 
         if (split[1])
-          options.password = split[1]
+          config.password = split[1]
       }
     }
 
