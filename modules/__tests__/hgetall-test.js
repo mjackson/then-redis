@@ -7,8 +7,10 @@ describe('hgetall', () => {
   )
 
   it('returns all fields and values of the hash at the given key', () =>
-    db.hgetall('my-key').then((hash) => {
-      expect(hash).toEqual({ a: 'one', b: 'two', c: 'three' })
+    db.hgetall('my-key').then(hash => {
+      expect(hash.a).toEqual('one')
+      expect(hash.b).toEqual('two')
+      expect(hash.c).toEqual('three')
     })
   )
 })

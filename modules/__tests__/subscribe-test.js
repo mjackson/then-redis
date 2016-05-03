@@ -34,6 +34,8 @@ describe('subscribe', () => {
         receivedMessages.push(message)
       })
 
+      expect(subscriber.pub_sub_mode).toBeFalsy()
+
       return subscriber.subscribe('a').then(
         () => sendMessages('a', sentMessages).then(waitForDelivery)
       )
@@ -43,8 +45,8 @@ describe('subscribe', () => {
       expect(receivedMessages).toEqual(sentMessages)
     })
 
-    it('sets the pub_sub_mode-flag', () => {
-      expect(subscriber.pub_sub_mode).toEqual(true)
+    it('sets the pub_sub_mode flag', () => {
+      expect(subscriber.pub_sub_mode).toBeTruthy()
     })
   })
 
