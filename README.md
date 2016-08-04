@@ -1,3 +1,5 @@
+## This package is no longer maintained. [node_redis](https://github.com/NodeRedis/node_redis) now includes support for promises in core, so this is no longer needed.
+
 # then-redis [![Travis][build-badge]][build] [![npm package][npm-badge]][npm]
 
 [build-badge]: https://img.shields.io/travis/mjackson/then-redis.svg?style=flat-square
